@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Puttman Lift Mechanism</title>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Puttman Mécanisme de l’élévateur</title>
 <style>
   .pnav{max-width:1240px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
     font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px}
@@ -16,7 +16,7 @@
   .pnav a:focus-visible{outline:2px solid var(--accent,#B5602A);outline-offset:2px}
 </style>
 </head><body>
-<nav class="pnav" aria-label="Pages"><span class="brand"><a class="home" href="../">Puttman · ball lift</a><span class="author">Khalid Hamdoun</span></span><span class="right"><span class="tabs"><a href="../teebox/">The whole course</a><a href="../lift/" aria-current="page">Inside the lift</a></span><span class="lang" aria-label="Language"><a href="./" hreflang="en" lang="en" aria-current="true">EN</a><a href="../fr/lift/" hreflang="fr" lang="fr">FR</a></span></span></nav>
+<nav class="pnav" aria-label="Pages"><span class="brand"><a class="home" href="../">Puttman · élévateur de balles</a><span class="author">Khalid Hamdoun</span></span><span class="right"><span class="tabs"><a href="../teebox/">Tout le parcours</a><a href="../lift/" aria-current="page">Dans l’élévateur</a></span><span class="lang" aria-label="Langue"><a href="../../lift/" hreflang="en" lang="en">EN</a><a href="./" hreflang="fr" lang="fr" aria-current="true">FR</a></span></span></nav>
 <style>
   :root{
     --bg:#F6F4EC; --surface:#FFFFFF; --surface-2:#EFEBDD;
@@ -130,61 +130,61 @@
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Ball return · vertical pop-up lift · to scale</div>
-    <h1>Inside the lift: every part, and how it moves</h1>
-    <p class="sub">A to-scale 3D model of the lift that sits under the tee box: clear tube, plunger, linear rail, toothed belt, NEMA17 motor, the two gate solenoids and the sensors. Press play to watch one ball go from the funnel to the tray, or pull the exploded-view slider to separate the parts.</p>
+    <div class="eyebrow">Retour des balles · élévateur vertical · à l’échelle</div>
+    <h1>Dans l’élévateur : chaque pièce, et comment elle bouge</h1>
+    <p class="sub">Un modèle 3D à l’échelle de l’élévateur placé sous la zone de départ : tube transparent, piston, rail linéaire, courroie crantée, moteur NEMA17, les deux solénoïdes de barrière et les capteurs. Lancez le cycle pour suivre une balle de l’entonnoir jusqu’au bac, ou tirez le curseur de vue éclatée pour séparer les pièces.</p>
   </header>
 
-  <section class="viewer" aria-label="3D model">
+  <section class="viewer" aria-label="Modèle 3D">
     <div class="stage" id="stage">
-      <canvas id="c" aria-label="3D model of the lift mechanism"></canvas>
+      <canvas id="c" aria-label="Modèle 3D du mécanisme de l’élévateur"></canvas>
       <div class="pins" id="pins"></div>
-      <div class="views" role="group" aria-label="Camera view">
-        <button type="button" data-view="iso" aria-pressed="true">3/4 view</button>
-        <button type="button" data-view="drive" aria-pressed="false">Drive side</button>
-        <button type="button" data-view="top" aria-pressed="false">Hood &amp; tray</button>
+      <div class="views" role="group" aria-label="Vue caméra">
+        <button type="button" data-view="iso" aria-pressed="true">Vue 3/4</button>
+        <button type="button" data-view="drive" aria-pressed="false">Côté entraînement</button>
+        <button type="button" data-view="top" aria-pressed="false">Capot &amp; bac</button>
       </div>
       <div class="ctrl">
-        <button type="button" id="playBtn" aria-pressed="true">Pause cycle</button>
-        <label for="explode">Exploded view <input type="range" id="explode" min="0" max="100" value="0"></label>
-        <button type="button" id="pinsBtn" aria-pressed="true">Numbers on</button>
-        <span class="phase" id="phase">Waiting</span>
+        <button type="button" id="playBtn" aria-pressed="true">Pause du cycle</button>
+        <label for="explode">Vue éclatée <input type="range" id="explode" min="0" max="100" value="0"></label>
+        <button type="button" id="pinsBtn" aria-pressed="true">Numéros affichés</button>
+        <span class="phase" id="phase">En attente</span>
       </div>
     </div>
     <aside class="parts">
-      <h3>Parts · click to highlight</h3>
+      <h3>Pièces · cliquer pour surligner</h3>
       <ol id="partList"></ol>
     </aside>
   </section>
 
-  <section class="steps" aria-label="How one cycle works">
-    <div class="step"><span class="k">1 · Load</span><p>Plunger waits at the bottom. The lower gate solenoid pulls its pin for 0.15 s and one ball rolls from the funnel channel through the side window onto the plunger face.</p><span class="t">Beam sensor confirms: exactly one ball</span></div>
-    <div class="step"><span class="k">2 · Lift</span><p>The motor turns the lower pulley; the belt pulls the carriage up the rail, and the arm through the tube slot carries the plunger 232 mm up.</p><span class="t">≈2 s · ~0.1 N·m · 260 rpm peak</span></div>
-    <div class="step"><span class="k">3 · Tip out</span><p>The face is tilted 10° toward the exit. As its low edge clears the wedge lip the tube wall is gone, and gravity rolls the ball out. The roof rises toward the exit, so if the ball jumps it is pushed out too.</p><span class="t">≈0.2 s to the lip · 0.26 m/s</span></div>
-    <div class="step"><span class="k">4 · Roll &amp; reset</span><p>The ball drops 22 mm down the wedge (≈0.56 m/s) and rolls to the back of the tray. The plunger goes back down; the upper gate lets the next ball into the gap between the gates.</p><span class="t">One ball ≈ every 5 s until the tray is full</span></div>
+  <section class="steps" aria-label="Déroulement d’un cycle">
+    <div class="step"><span class="k">1 · Chargement</span><p>Le piston attend en bas. Le solénoïde de la barrière inférieure retire sa tige pendant 0,15 s et une balle roule du canal de l’entonnoir, par la fenêtre latérale, jusque sur la face du piston.</p><span class="t">Le capteur à faisceau confirme : une seule balle</span></div>
+    <div class="step"><span class="k">2 · Montée</span><p>Le moteur entraîne la poulie basse ; la courroie tire le chariot le long du rail, et le bras qui traverse la fente du tube monte le piston de 232 mm.</p><span class="t">≈2 s · ~0,1 N·m · 260 tr/min en pointe</span></div>
+    <div class="step"><span class="k">3 · Éjection</span><p>La face est inclinée de 10° vers la sortie. Quand son bord bas dépasse la lèvre de la cale, la paroi du tube disparaît et la gravité fait rouler la balle dehors. Le toit monte vers la sortie : si la balle saute, elle est aussi poussée dehors.</p><span class="t">≈0,2 s jusqu’à la lèvre · 0,26 m/s</span></div>
+    <div class="step"><span class="k">4 · Roulement &amp; retour</span><p>La balle descend la cale de 22 mm (≈0,56 m/s) et roule jusqu’au bout de la file du bac. Le piston redescend ; la barrière supérieure laisse passer la balle suivante entre les deux barrières.</p><span class="t">Une balle ≈ toutes les 5 s jusqu’à ce que le bac soit plein</span></div>
   </section>
 
-  <section class="callout" aria-label="Drive change">
+  <section class="callout" aria-label="Changement d’entraînement">
     <div>
-      <h2>Drive change: toothed belt instead of lead screw</h2>
-      <p>With the hood, the plunger has to travel 232 mm, and everything must fit under the plywood (about 272 mm clear). A lead screw needs its nut travel plus a bearing block at each end plus a pulley: about 287 mm, which does not fit. A GT2 belt runs on pulleys beside the rail, so only the rail length counts: 232 mm travel + 29 mm carriage = 261 mm. It fits, runs slower (≈260 rpm), and is simpler to service. This replaces the lead screw in the Issue 2 spec.</p>
+      <h2>Changement d’entraînement : courroie crantée au lieu de la vis</h2>
+      <p>Avec le capot, le piston doit parcourir 232 mm, et tout doit tenir sous le contreplaqué (environ 272 mm libres). Une vis trapézoïdale demande sa course d’écrou plus un palier à chaque extrémité plus une poulie : environ 287 mm, ce qui ne rentre pas. Une courroie GT2 tourne sur des poulies à côté du rail, donc seule la longueur du rail compte : 232 mm de course + 29 mm de chariot = 261 mm. Elle rentre, tourne moins vite (≈260 tr/min) et s’entretient plus facilement. Elle remplace la vis de la spécification édition 2.</p>
     </div>
-    <div class="bars" aria-label="Height needed vs available">
-      <div class="bar"><span>Lead screw: 287 mm needed</span><div class="track"><div class="fill" style="width:100%;background:var(--flag)"></div><div class="limit" style="left:94.8%"></div></div></div>
-      <div class="bar"><span>GT2 belt: 261 mm needed</span><div class="track"><div class="fill" style="width:90.9%;background:var(--structure)"></div><div class="limit" style="left:94.8%"></div></div></div>
-      <span style="color:var(--ink-muted)">Black line = 272 mm available under the plywood</span>
+    <div class="bars" aria-label="Hauteur nécessaire et disponible">
+      <div class="bar"><span>Vis trapézoïdale : 287 mm nécessaires</span><div class="track"><div class="fill" style="width:100%;background:var(--flag)"></div><div class="limit" style="left:94.8%"></div></div></div>
+      <div class="bar"><span>Courroie GT2 : 261 mm nécessaires</span><div class="track"><div class="fill" style="width:90.9%;background:var(--structure)"></div><div class="limit" style="left:94.8%"></div></div></div>
+      <span style="color:var(--ink-muted)">Trait noir = 272 mm disponibles sous le contreplaqué</span>
     </div>
   </section>
 
-  <section aria-label="Parts list" style="display:flex;flex-direction:column;gap:10px">
-    <h2>Parts list</h2>
+  <section aria-label="Liste des pièces" style="display:flex;flex-direction:column;gap:10px">
+    <h2>Liste des pièces</h2>
     <div class="tablewrap">
       <table>
-        <thead><tr><th>#</th><th>Part</th><th>Specification</th><th>Typical part</th><th>What it does</th></tr></thead>
+        <thead><tr><th>N°</th><th>Pièce</th><th>Spécification</th><th>Pièce type</th><th>Rôle</th></tr></thead>
         <tbody id="bom"></tbody>
       </table>
     </div>
-    <p class="note">Model and numbers follow the Issue 2/3 concept: plunger loads at 95 mm, top of stroke 327 mm, tee surface 300 mm (client CAD), plywood 18 mm assumed. "Typical part" names are common off-the-shelf types for sizing and quoting, not a final selection. The funnel channel is shown as the straight end section the client's funnel must finish with.</p>
+    <p class="note">Le modèle et les valeurs suivent le concept des éditions 2/3 : chargement du piston à 95 mm, haut de course à 327 mm, surface de départ à 300 mm (CAO client), contreplaqué de 18 mm supposé. Les « pièces types » sont des références courantes du commerce pour le dimensionnement et les devis, pas un choix définitif. Le canal de l’entonnoir est représenté par la section droite finale que l’entonnoir du client doit avoir.</p>
   </section>
 </div>
 
@@ -193,19 +193,19 @@
 (function(){
   // ---------------- parts data (shared by pins, list and table) ----------------
   var PARTS = [
-    {id:'tube',   name:'Lift tube',            spec:'Clear PC Ø56 × 3 mm, 272 mm long, 10 mm drive slot + 50 × 55 mm side window', ex:'Polycarbonate tube Ø56/50', role:'Guides the ball and plunger; you can see the ball rise.'},
-    {id:'plunger',name:'Plunger',              spec:'Ø49 × 80 mm, top face tilted 10° toward the exit, 2 PTFE wear bands', ex:'POM-C or PA12-CF', role:'Carries the ball; the tilt rolls it out at the top.'},
-    {id:'arm',    name:'Drive arm',            spec:'5 mm aluminium bracket through the tube slot', ex:'EN AW-6082 T6', role:'Links plunger to carriage; stops the plunger turning.'},
-    {id:'rail',   name:'Linear rail + carriage',spec:'Rail 268 mm, short carriage 29 mm', ex:'MGN9 rail + MGN9C block', role:'Keeps the lift straight and smooth.'},
-    {id:'belt',   name:'Toothed belt + pulleys',spec:'6 mm belt, 20-tooth motor pulley (bottom) and idler (top), 238 mm centres', ex:'GT2 6 mm, GT2-20T', role:'Turns motor rotation into up/down travel (40 mm per turn).'},
-    {id:'motor',  name:'Stepper motor',        spec:'42 × 42 × 40 mm, ~0.4 N·m holding, 24 V', ex:'NEMA17 + TMC2209 driver', role:'Drives the lift; current-limited to ≤ 50 N push, stall detection.'},
-    {id:'plate',  name:'Mounting plate + base',spec:'5 mm plate 270 × 120 mm on a 6 mm base 220 × 200 mm, rubber feet', ex:'EN AW-6082 / 5754', role:'Holds tube, rail and motor in line; fixes to the frame.'},
-    {id:'gates',  name:'Gate solenoids (×2)',  spec:'24 V push-pull, ~10 mm stroke, spring return, 50 mm apart', ex:'JF-0530B class', role:'Let exactly one ball at a time onto the plunger.'},
-    {id:'channel',name:'Funnel end channel',   spec:'50 mm U-channel, ≥110 mm straight, ≥10° fall, enters on the high side of the face', ex:'Client funnel / ply or PETG', role:'Queues balls from all holes to the lift.'},
-    {id:'sensors',name:'Sensors',              spec:'Home switch at the bottom of the rail, IR beam across the tube at load height', ex:'Slotted opto + IR pair', role:'Home position; confirms one ball is loaded.'},
-    {id:'hood',   name:'Hood',                 spec:'1.5 mm sheet, 75 mm high at the back rising to 95 mm at the opening', ex:'Stainless or powder-coated Al', role:'Covers the hole; roof deflects the ball outward.'},
-    {id:'wedge',  name:'Exit wedge + tray',    spec:'Wedge 100 mm, 22 mm drop; tray 225 mm for 5 balls with 15 mm stop', ex:'POM or hardwood; Al rails', role:'Gives the ball its roll and keeps balls ready to putt.'},
-    {id:'full',   name:'Tray-full sensor',     spec:'Reflective IR at the tray entry', ex:'IR reflective module', role:'Stops the lift when 5 balls are waiting.'}
+    {id:'tube',   name:'Tube de l’élévateur',  spec:'PC transparent Ø56 × 3 mm, 272 mm de long, fente de 10 mm + fenêtre latérale 50 × 55 mm', ex:'Tube polycarbonate Ø56/50', role:'Guide la balle et le piston ; on voit la balle monter.'},
+    {id:'plunger',name:'Piston',               spec:'Ø49 × 80 mm, face supérieure inclinée de 10° vers la sortie, 2 bagues PTFE', ex:'POM-C ou PA12-CF', role:'Porte la balle ; l’inclinaison la fait rouler dehors en haut.'},
+    {id:'arm',    name:'Bras d’entraînement',  spec:'Équerre aluminium 5 mm traversant la fente du tube', ex:'EN AW-6082 T6', role:'Relie le piston au chariot ; empêche le piston de tourner.'},
+    {id:'rail',   name:'Rail linéaire + chariot',spec:'Rail 268 mm, chariot court 29 mm', ex:'Rail MGN9 + patin MGN9C', role:'Garde la montée droite et régulière.'},
+    {id:'belt',   name:'Courroie crantée + poulies',spec:'Courroie 6 mm, poulie moteur 20 dents (bas) et poulie de renvoi (haut), entraxe 238 mm', ex:'GT2 6 mm, GT2-20T', role:'Transforme la rotation du moteur en montée/descente (40 mm par tour).'},
+    {id:'motor',  name:'Moteur pas à pas',     spec:'42 × 42 × 40 mm, ~0,4 N·m de maintien, 24 V', ex:'NEMA17 + driver TMC2209', role:'Entraîne l’élévateur ; courant limité à ≤ 50 N de poussée, détection de blocage.'},
+    {id:'plate',  name:'Platine + embase',     spec:'Platine 5 mm 270 × 120 mm sur embase 6 mm 220 × 200 mm, pieds caoutchouc', ex:'EN AW-6082 / 5754', role:'Maintient tube, rail et moteur alignés ; se fixe sur la structure.'},
+    {id:'gates',  name:'Solénoïdes de barrière (×2)',spec:'24 V push-pull, course ~10 mm, rappel par ressort, espacés de 50 mm', ex:'Type JF-0530B', role:'Laissent passer une seule balle à la fois vers le piston.'},
+    {id:'channel',name:'Canal de fin d’entonnoir',spec:'Canal en U de 50 mm, ≥110 mm droit, pente ≥10°, arrive du côté haut de la face', ex:'Entonnoir client / contreplaqué ou PETG', role:'Met en file les balles de tous les trous vers l’élévateur.'},
+    {id:'sensors',name:'Capteurs',             spec:'Capteur d’origine en bas du rail, faisceau IR à travers le tube à hauteur de chargement', ex:'Fourche optique + paire IR', role:'Position d’origine ; confirme qu’une balle est chargée.'},
+    {id:'hood',   name:'Capot',                spec:'Tôle 1,5 mm, 75 mm de haut à l’arrière, 95 mm à l’ouverture', ex:'Inox ou alu thermolaqué', role:'Couvre le trou ; le toit renvoie la balle vers la sortie.'},
+    {id:'wedge',  name:'Cale de sortie + bac', spec:'Cale 100 mm, chute 22 mm ; bac 225 mm pour 5 balles avec butée de 15 mm', ex:'POM ou bois dur ; rails alu', role:'Donne l’élan à la balle et garde des balles prêtes à jouer.'},
+    {id:'full',   name:'Capteur bac plein',    spec:'IR réflectif à l’entrée du bac', ex:'Module IR réflectif', role:'Arrête l’élévateur quand 5 balles attendent.'}
   ];
 
   // ---------------- three.js setup (units: mm) ----------------
@@ -422,8 +422,8 @@
 
   // ---------------- cycle animation ----------------
   var PH = [ // name, duration
-    ['Waiting', 0.7], ['Lower gate opens: ball rolls onto the plunger', 0.7], ['Belt lifts the plunger 232 mm', 2.0],
-    ['Face clears the lip: ball rolls out', 0.9], ['Ball joins the tray', 0.3], ['Plunger returns down', 2.0], ['Upper gate lets the next ball in', 0.6]
+    ['En attente', 0.7], ['La barrière basse s’ouvre : la balle roule sur le piston', 0.7], ['La courroie monte le piston de 232 mm', 2.0],
+    ['La face dépasse la lèvre : la balle sort', 0.9], ['La balle rejoint le bac', 0.3], ['Le piston redescend', 2.0], ['La barrière haute laisse entrer la balle suivante', 0.6]
   ];
   var cyc = {i:0, t:0, n:0}, playing = true;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -542,10 +542,10 @@
 
   // ---------------- controls ----------------
   var playBtn = document.getElementById('playBtn');
-  playBtn.addEventListener('click', function(){ playing = !playing; playBtn.textContent = playing ? 'Pause cycle' : 'Play cycle'; playBtn.setAttribute('aria-pressed', playing ? 'true' : 'false'); });
+  playBtn.addEventListener('click', function(){ playing = !playing; playBtn.textContent = playing ? 'Pause du cycle' : 'Lancer le cycle'; playBtn.setAttribute('aria-pressed', playing ? 'true' : 'false'); });
   document.getElementById('explode').addEventListener('input', function(e){ explodeAmt = e.target.value / 100; applyExplode(); });
   var pinsBtn = document.getElementById('pinsBtn');
-  pinsBtn.addEventListener('click', function(){ pinsOn = !pinsOn; pinsBtn.textContent = pinsOn ? 'Numbers on' : 'Numbers off'; pinsBtn.setAttribute('aria-pressed', pinsOn ? 'true' : 'false'); });
+  pinsBtn.addEventListener('click', function(){ pinsOn = !pinsOn; pinsBtn.textContent = pinsOn ? 'Numéros affichés' : 'Numéros masqués'; pinsBtn.setAttribute('aria-pressed', pinsOn ? 'true' : 'false'); });
 
   var VIEWS = {
     iso:{t:new THREE.Vector3(20, 175, -20), d:760, th:0.78, ph:1.2},

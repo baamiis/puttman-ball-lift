@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Puttman Tee Box Lift</title>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Puttman Élévateur du départ</title>
 <style>
   .pnav{max-width:1240px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
     font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px}
@@ -16,7 +16,7 @@
   .pnav a:focus-visible{outline:2px solid var(--accent,#B5602A);outline-offset:2px}
 </style>
 </head><body>
-<nav class="pnav" aria-label="Pages"><span class="brand"><a class="home" href="../">Puttman · ball lift</a><span class="author">Khalid Hamdoun</span></span><span class="right"><span class="tabs"><a href="../teebox/" aria-current="page">The whole course</a><a href="../lift/">Inside the lift</a></span><span class="lang" aria-label="Language"><a href="./" hreflang="en" lang="en" aria-current="true">EN</a><a href="../fr/teebox/" hreflang="fr" lang="fr">FR</a></span></span></nav>
+<nav class="pnav" aria-label="Pages"><span class="brand"><a class="home" href="../">Puttman · élévateur de balles</a><span class="author">Khalid Hamdoun</span></span><span class="right"><span class="tabs"><a href="../teebox/" aria-current="page">Tout le parcours</a><a href="../lift/">Dans l’élévateur</a></span><span class="lang" aria-label="Langue"><a href="../../teebox/" hreflang="en" lang="en">EN</a><a href="./" hreflang="fr" lang="fr" aria-current="true">FR</a></span></span></nav>
 <style>
   :root{
     --bg:#F6F4EC; --surface:#FFFFFF; --surface-2:#EFEBDD;
@@ -158,68 +158,68 @@
 
 <div class="wrap">
   <div>
-    <div class="eyebrow">Ball return &amp; dispensing · Issue 3 concept</div>
-    <h1>13 holes, one funnel, one lift</h1>
-    <p class="sub">Whichever of the 13 holes the ball drops into, it lands on the client's V-funnel under the 3° deck, rolls down the funnel's valley to its single outlet, and runs through a short tube to two solenoid gates. A vertical plunger then lifts it into a small hood. It rolls down a wedge into a tray, and the tray keeps up to five balls ready to putt. The lift stops when the tray is full.</p>
+    <div class="eyebrow">Retour &amp; distribution des balles · concept édition 3</div>
+    <h1>13 trous, un entonnoir, un élévateur</h1>
+    <p class="sub">Quel que soit le trou (sur 13) dans lequel la balle tombe, elle arrive sur l’entonnoir en V du client sous le plateau incliné à 3°, descend le creux de l’entonnoir jusqu’à sa sortie unique, puis passe par un court tube jusqu’à deux barrières à solénoïde. Un piston vertical la monte ensuite dans un petit capot. Elle descend une cale de sortie jusqu’à un bac, qui garde jusqu’à cinq balles prêtes à jouer. L’élévateur s’arrête quand le bac est plein.</p>
   </div>
 
   <div class="stage" id="stage">
-    <canvas id="c" aria-label="3D simulation of the tee box ball lift"></canvas>
+    <canvas id="c" aria-label="Simulation 3D de l’élévateur de balles du départ"></canvas>
     <div class="panel">
-      <b>Tee box 818 × 1000 × 300 mm</b>
-      <span>13 holes → client funnel → tube → 2 gates → plunger (232 mm) → hood → wedge → tray</span>
+      <b>Zone de départ 818 × 1000 × 300 mm</b>
+      <span>13 trous → entonnoir client → tube → 2 barrières → piston (232 mm) → capot → cale → bac</span>
     </div>
-    <div class="views" role="group" aria-label="Camera view">
-      <button type="button" id="viewTee" aria-pressed="false">Tee box</button>
-      <button type="button" id="viewLift" aria-pressed="false">Lift close-up</button>
-      <button type="button" id="viewAll" aria-pressed="true">Whole platform</button>
-      <button type="button" id="viewFunnel" aria-pressed="false">Under the deck</button>
+    <div class="views" role="group" aria-label="Vue caméra">
+      <button type="button" id="viewTee" aria-pressed="false">Départ</button>
+      <button type="button" id="viewLift" aria-pressed="false">Élévateur de près</button>
+      <button type="button" id="viewAll" aria-pressed="true">Plateforme entière</button>
+      <button type="button" id="viewFunnel" aria-pressed="false">Sous le plateau</button>
     </div>
-    <div class="count" id="count">Lift: idle</div>
-    <div class="hint">Drag to rotate · Scroll or pinch to zoom</div>
+    <div class="count" id="count">Élévateur : au repos</div>
+    <div class="hint">Glisser pour tourner · Molette ou pincer pour zoomer</div>
   </div>
 
   <div class="play">
     <div class="play-row">
-      <button class="hit-btn" id="hitBtn" type="button">HIT BALL</button>
-      <label class="aim" for="pAim">Aim at
-        <select id="pAim"><option value="rand">Random hole</option></select>
+      <button class="hit-btn" id="hitBtn" type="button">FRAPPER</button>
+      <label class="aim" for="pAim">Viser
+        <select id="pAim"><option value="rand">Trou au hasard</option></select>
       </label>
-      <div class="status-line" id="statusLine">Tray full. Press Hit to take a ball and putt.</div>
+      <div class="status-line" id="statusLine">Bac plein. Appuyez sur Frapper pour prendre une balle et putter.</div>
     </div>
     <div class="chips">
-      <span class="chip" id="chipTray">Tray <b>5/5</b></span>
-      <span class="chip" id="chipQueue">At the gates <b>0</b></span>
-      <span class="chip" id="chipTransit">Returning <b>0</b></span>
-      <span class="chip" id="chipLift">Lift <b>idle</b></span>
-      <span class="chip made" id="chipMade">Holed <b>0</b></span>
-      <span class="chip miss" id="chipMiss">Missed <b>0</b></span>
-      <span class="chip" id="chipLast">Last <b>–</b></span>
+      <span class="chip" id="chipTray">Bac <b>5/5</b></span>
+      <span class="chip" id="chipQueue">Aux barrières <b>0</b></span>
+      <span class="chip" id="chipTransit">En retour <b>0</b></span>
+      <span class="chip" id="chipLift">Élévateur <b>au repos</b></span>
+      <span class="chip made" id="chipMade">Rentrées <b>0</b></span>
+      <span class="chip miss" id="chipMiss">Ratées <b>0</b></span>
+      <span class="chip" id="chipLast">Dernier <b>–</b></span>
     </div>
   </div>
 
   <div class="play">
     <div class="params-head">
-      <span class="params-title">Simulation parameters</span>
-      <button class="apply-btn" id="applyBtn" type="button">Apply &amp; reset</button>
+      <span class="params-title">Paramètres de simulation</span>
+      <button class="apply-btn" id="applyBtn" type="button">Appliquer &amp; réinitialiser</button>
     </div>
     <div class="params-grid">
-      <label for="pStroke">Lift stroke time (s)<input type="number" id="pStroke" value="2.0" min="0.5" max="5" step="0.1"></label>
-      <label for="pReturn">Return transit (s)<input type="number" id="pReturn" value="6.0" min="2" max="15" step="0.5"></label>
-      <label for="pMade">Holed probability (%)<input type="number" id="pMade" value="40" min="0" max="100" step="5"></label>
-      <label for="pBalls">Ball pool size<input type="number" id="pBalls" value="10" min="1" max="20" step="1"></label>
-      <label for="pTray">Tray capacity<input type="number" id="pTray" value="5" min="1" max="5" step="1"></label>
+      <label for="pStroke">Durée de course (s)<input type="number" id="pStroke" value="2.0" min="0.5" max="5" step="0.1"></label>
+      <label for="pReturn">Durée de retour (s)<input type="number" id="pReturn" value="6.0" min="2" max="15" step="0.5"></label>
+      <label for="pMade">Probabilité de rentrer (%)<input type="number" id="pMade" value="40" min="0" max="100" step="5"></label>
+      <label for="pBalls">Nombre de balles<input type="number" id="pBalls" value="10" min="1" max="20" step="1"></label>
+      <label for="pTray">Capacité du bac<input type="number" id="pTray" value="5" min="1" max="5" step="1"></label>
     </div>
   </div>
 
   <div class="legend">
-    <div class="stat"><span class="k">Holes</span><span class="v">13<span>one funnel, one outlet</span></span></div>
-    <div class="stat"><span class="k">Lift</span><span class="v">232 mm<span>vertical stroke</span></span></div>
-    <div class="stat"><span class="k">Hood</span><span class="v">75–95 mm<span>roof rises to exit</span></span></div>
-    <div class="stat"><span class="k">Exit wedge</span><span class="v">22 mm<span>drop → ~0.56 m/s</span></span></div>
-    <div class="stat"><span class="k">Tray</span><span class="v">5<span>balls ready</span></span></div>
+    <div class="stat"><span class="k">Trous</span><span class="v">13<span>un entonnoir, une sortie</span></span></div>
+    <div class="stat"><span class="k">Élévateur</span><span class="v">232 mm<span>course verticale</span></span></div>
+    <div class="stat"><span class="k">Capot</span><span class="v">75–95 mm<span>toit montant vers la sortie</span></span></div>
+    <div class="stat"><span class="k">Cale de sortie</span><span class="v">22 mm<span>chute → ~0,56 m/s</span></span></div>
+    <div class="stat"><span class="k">Bac</span><span class="v">5<span>balles prêtes</span></span></div>
   </div>
-  <p class="note">Concept model to the Issue 2/3 numbers: tee box and 2000 mm deck at 3° from the client's CAD; the 13-hole layout, cup depth and the funnel shape (drawn here extended under the whole deck, with its valley falling about 4.5° to the outlet) are placeholders until the client confirms them. The deck and tee box are drawn see-through so the return path and the lift are visible.</p>
+  <p class="note">Modèle de concept aux cotes des éditions 2/3 : zone de départ et plateau de 2000 mm à 3° d’après la CAO du client ; la disposition des 13 trous, la profondeur des coupes et la forme de l’entonnoir (représenté ici sous tout le plateau, avec un creux descendant d’environ 4,5° vers la sortie) sont provisoires en attendant la confirmation du client. Le plateau et la zone de départ sont transparents pour montrer le trajet de retour et l’élévateur.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -512,8 +512,8 @@
         play.mesh.position.copy(c.getPointAt(1 - Math.pow(1 - k2, 1.6)));
         if (k2 >= 1){
           var H = HOLES[play.hole];
-          if (play.made){ madeN++; H.flash = 1.6; lastShot = 'Hole ' + (play.hole + 1) + ': in!'; }
-          else { missN++; lastShot = 'Hole ' + (play.hole + 1) + ': missed'; }
+          if (play.made){ madeN++; H.flash = 1.6; lastShot = 'Trou ' + (play.hole + 1) + ' : rentrée !'; }
+          else { missN++; lastShot = 'Trou ' + (play.hole + 1) + ' : ratée'; }
           play.mesh.material = ballMat;
           startReturn(play.mesh, play.made ? H.curve : missCurve);
           play = null;
@@ -583,33 +583,33 @@
   var countEl = document.getElementById('count');
   var chips = {tray:document.getElementById('chipTray'), queue:document.getElementById('chipQueue'), transit:document.getElementById('chipTransit'),
     lift:document.getElementById('chipLift'), made:document.getElementById('chipMade'), miss:document.getElementById('chipMiss'), last:document.getElementById('chipLast')};
-  var liftNames = {idle:'idle (down)', release:'loading', up:'lifting', tip:'tipping out', down:'returning down'};
+  var liftNames = {idle:'au repos (bas)', release:'chargement', up:'montée', tip:'éjection', down:'redescente'};
   var lastUI = '';
   function updateUI(){
     var full = tray.length >= P.tray;
     var queued = queue.length + (bufferBall ? 1 : 0);
     var state = [tray.length, queued, returning.length, lift.state, madeN, missN, !!play, full, lastShot].join('|');
     if (state === lastUI) return; lastUI = state;
-    chips.tray.innerHTML = 'Tray <b>' + tray.length + '/' + P.tray + (full ? ' · full' : '') + '</b>';
+    chips.tray.innerHTML = 'Bac <b>' + tray.length + '/' + P.tray + (full ? ' · plein' : '') + '</b>';
     chips.tray.className = 'chip' + (full ? ' full' : '');
-    chips.queue.innerHTML = 'At the gates <b>' + queued + '</b>';
-    chips.transit.innerHTML = 'Returning <b>' + returning.length + '</b>';
-    chips.lift.innerHTML = 'Lift <b>' + liftNames[lift.state] + '</b>';
+    chips.queue.innerHTML = 'Aux barrières <b>' + queued + '</b>';
+    chips.transit.innerHTML = 'En retour <b>' + returning.length + '</b>';
+    chips.lift.innerHTML = 'Élévateur <b>' + liftNames[lift.state] + '</b>';
     chips.lift.className = 'chip' + (lift.state !== 'idle' ? ' busy' : '');
-    chips.made.innerHTML = 'Holed <b>' + madeN + '</b>';
-    chips.miss.innerHTML = 'Missed <b>' + missN + '</b>';
-    chips.last.innerHTML = 'Last <b>' + (lastShot || '–') + '</b>';
-    countEl.textContent = 'Lift: ' + liftNames[lift.state] + (full ? ' · tray-full sensor ON' : '');
+    chips.made.innerHTML = 'Rentrées <b>' + madeN + '</b>';
+    chips.miss.innerHTML = 'Ratées <b>' + missN + '</b>';
+    chips.last.innerHTML = 'Dernier <b>' + (lastShot || '–') + '</b>';
+    countEl.textContent = 'Élévateur : ' + liftNames[lift.state] + (full ? ' · capteur bac plein ACTIF' : '');
     hitBtn.disabled = !!play || tray.length === 0;
-    if (play) statusEl.textContent = play.phase === 'toSpot' ? 'Raking a ball out of the tray…' : 'Ball rolling toward hole ' + (play.hole + 1) + '…';
-    else if (tray.length === 0) statusEl.textContent = 'Tray empty: waiting for balls to come back and be lifted.';
-    else if (full) statusEl.textContent = 'Tray full, lift stopped. Press Hit to take a ball and putt.';
-    else if (lift.state !== 'idle') statusEl.textContent = 'Lift refilling the tray while you play. Press Hit any time.';
-    else statusEl.textContent = 'Ball' + (tray.length > 1 ? 's' : '') + ' ready in the tray. Press Hit.';
+    if (play) statusEl.textContent = play.phase === 'toSpot' ? 'On sort une balle du bac…' : 'La balle roule vers le trou ' + (play.hole + 1) + '…';
+    else if (tray.length === 0) statusEl.textContent = 'Bac vide : on attend que les balles reviennent et soient remontées.';
+    else if (full) statusEl.textContent = 'Bac plein, élévateur arrêté. Appuyez sur Frapper pour prendre une balle et putter.';
+    else if (lift.state !== 'idle') statusEl.textContent = 'L’élévateur remplit le bac pendant que vous jouez. Appuyez sur Frapper quand vous voulez.';
+    else statusEl.textContent = (tray.length > 1 ? 'Balles prêtes' : 'Balle prête') + ' dans le bac. Appuyez sur Frapper.';
   }
 
   var aimSel = document.getElementById('pAim');
-  HOLES.forEach(function(h, i){ var o = document.createElement('option'); o.value = String(i + 1); o.textContent = 'Hole ' + (i + 1); aimSel.appendChild(o); });
+  HOLES.forEach(function(h, i){ var o = document.createElement('option'); o.value = String(i + 1); o.textContent = 'Trou ' + (i + 1); aimSel.appendChild(o); });
   hitBtn.addEventListener('click', hit);
   document.getElementById('applyBtn').addEventListener('click', reset);
 
