@@ -338,7 +338,7 @@
   // ---------- client funnel: one V-funnel under the whole deck -> one outlet ----------
   var OUT_X = 7.2, OUT_Y = 1.55, FAR_X = 27.9, FAR_Y = 3.2;
   function valleyY(x){ return OUT_Y + (x - OUT_X) * (FAR_Y - OUT_Y) / (FAR_X - OUT_X); }
-  function valleyZ(x){ return LZ * (1 - (x - OUT_X) / (FAR_X - OUT_X)); }
+  function valleyZ(x){ return LZ; }                // low edge runs straight along the lift side (client re-route)
   function funnelY(x, z){ return Math.min(valleyY(x) + Math.abs(z - valleyZ(x)) * 0.15, deckTop(x) - CUP_D - 0.1); }
   (function(){
     var nx = 42, nz = 20, x0 = OUT_X, x1 = FAR_X, z0 = -TB_W / 2 + 0.1, z1 = TB_W / 2 - 0.1, pos = [], idx = [];
@@ -375,16 +375,23 @@
   // A ball stays on its own side of the V-funnel and rolls back toward the tee box; it only merges with
   // the others where the funnel pinches into its single outlet (the same mouth shape as the drawn surface).
   var PINCH = 2.2;
+  // Downhill path on the funnel: across-slope 0.15, along-slope (FAR_Y-OUT_Y)/(FAR_X-OUT_X), so the ball runs
+  // diagonally until it meets the low edge (lift side), then rolls along that edge to our funnel end.
+  var CROSS = 0.15, ALONG = (FAR_Y - OUT_Y) / (FAR_X - OUT_X), RATIO = CROSS / ALONG;
   function flowPath(xStart, z0){
-    var pts = [];
-    for (var x = xStart; x > OUT_X + 0.05; x -= 0.5){
-      var t = Math.max(0, 1 - (x - OUT_X) / PINCH);               // 0 on the open funnel, 1 at the outlet
-      var drift = 0.12 * (xStart - x) / Math.max(1, xStart - OUT_X);
-      var zz = z0 + (valleyZ(x) - z0) * Math.min(1, drift + t * 0.95);
-      pts.push(new THREE.Vector3(x, funnelY(x, zz) + BR, zz));
+    var pts = [], z = z0, dx = 0.25;
+    for (var x = xStart; x > OUT_X + 0.05; x -= dx){
+      var gap = LZ - z;
+      if (Math.abs(gap) > 1e-3){ z += Math.sign(gap) * Math.min(Math.abs(gap), dx * RATIO); }
+      pts.push(new THREE.Vector3(x, funnelY(x, z) + BR, z));
     }
     return pts.concat(TAIL);
   }
+  // mark the low edge the balls collect on
+  (function(){
+    var e = []; for (var k = 0; k <= 40; k++){ var xx = OUT_X + (FAR_X - OUT_X) * k / 40; e.push(new THREE.Vector3(xx, valleyY(xx) + 0.02, LZ)); }
+    scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(e), 60, 0.035, 6, false), new THREE.MeshBasicMaterial({color:0x8a4b14})));
+  })();
   HOLES.forEach(function(h){
     var y = deckTop(h.x);
     h.curve = new THREE.CatmullRomCurve3([
