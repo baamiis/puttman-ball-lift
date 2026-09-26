@@ -136,7 +136,7 @@
   <header>
     <div class="eyebrow">Plan B · same lift, picks the ball up at tray level · to scale</div>
     <h1>Plan B: inside the lift, picking up at tray level</h1>
-    <p class="sub">Plan B is Plan A with one change: the client keeps the V-funnel as built, so the ball arrives only 24 mm above the slab. The lift therefore uses a short puck instead of the plunger, travels 305 mm instead of 232, and the top 68 mm of the rail and belt rises through a slot in the plywood into a longer hood. Everything else is Plan A. Press play to watch one ball, or pull the exploded-view slider.</p>
+    <p class="sub">Plan B is Plan A with one change: the client keeps the V-funnel as built, so the ball arrives only 28 mm above the slab. The lift therefore uses a short puck instead of the plunger, travels 301 mm instead of 232, and the top 68 mm of the rail and belt rises through a slot in the plywood into a longer hood. Everything else is Plan A. Press play to watch one ball, or pull the exploded-view slider.</p>
   </header>
 
   <section class="viewer" aria-label="3D model">
@@ -162,8 +162,8 @@
   </section>
 
   <section class="steps" aria-label="How one cycle works">
-    <div class="step"><span class="k">1 · Load</span><p>The puck waits at the bottom, at the client’s tray level (~24 mm). The lower gate solenoid pulls its pin down for 0.15 s and one ball rolls through the side window onto the puck.</p><span class="t">Beam sensor confirms: exactly one ball</span></div>
-    <div class="step"><span class="k">2 · Lift</span><p>The motor turns the lower pulley; the belt pulls the carriage up the rail, and the arm through the tube slot carries the puck 305 mm up. The top of the rail and belt is inside the hood.</p><span class="t">≈2.6 s · ~0.1 N·m · 260 rpm peak</span></div>
+    <div class="step"><span class="k">1 · Load</span><p>The puck waits at the bottom, at the client’s tray level (~28 mm). The lower gate solenoid pulls its pin down for 0.15 s and one ball rolls through the side window onto the puck.</p><span class="t">Beam sensor confirms: exactly one ball</span></div>
+    <div class="step"><span class="k">2 · Lift</span><p>The motor turns the lower pulley; the belt pulls the carriage up the rail, and the arm through the tube slot carries the puck 301 mm up. The top of the rail and belt is inside the hood.</p><span class="t">≈2.6 s · ~0.1 N·m · 260 rpm peak</span></div>
     <div class="step"><span class="k">3 · Tip out</span><p>The face is tilted 10° toward the exit. As its low edge clears the wedge lip the tube wall is gone, and gravity rolls the ball out. The roof rises toward the exit, so if the ball jumps it is pushed out too.</p><span class="t">≈0.2 s to the lip · 0.26 m/s</span></div>
     <div class="step"><span class="k">4 · Roll &amp; reset</span><p>The ball drops 22 mm down the wedge (≈0.56 m/s) and rolls to the back of the tray. The puck goes back down; the upper gate lets the next ball into the gap between the gates.</p><span class="t">One ball ≈ every 6 s until the tray is full</span></div>
   </section>
@@ -171,10 +171,10 @@
   <section class="callout" aria-label="Drive change">
     <div>
       <h2>Why Plan B looks slightly different</h2>
-      <p>Only one thing changes from Plan A: the ball is picked up at the client’s tray level (~24 mm) instead of 97 mm. From that, and nothing else: the lift travels 305 mm instead of 232; an 80 mm plunger no longer fits below the pickup, so a short puck is used; the rail needs 340 mm but only ~272 mm fits under the plywood, so its top 68 mm rises through a slot into a longer hood (120 × 100 instead of 90 × 90); and the gate solenoids sit beside the channel because the floor is too low for them underneath. Same position, same belt drive, same gates, same hood roof, wedge and tray as Plan A.</p>
+      <p>Only one thing changes from Plan A: the ball is picked up at the client’s tray level (~28 mm) instead of 97 mm. From that, and nothing else: the lift travels 301 mm instead of 232; an 80 mm plunger no longer fits below the pickup, so a short puck is used; the rail needs 336 mm but only ~272 mm fits under the plywood, so its top 68 mm rises through a slot into a longer hood (120 × 100 instead of 90 × 90); and the gate solenoids sit beside the channel because the floor is too low for them underneath. Same position, same belt drive, same gates, same hood roof, wedge and tray as Plan A.</p>
     </div>
     <div class="bars" aria-label="Height needed vs available">
-      <div class="bar"><span>Plan B rail: 340 mm needed</span><div class="track"><div class="fill" style="width:100%;background:var(--flag)"></div><div class="limit" style="left:94.8%"></div></div></div>
+      <div class="bar"><span>Plan B rail: 336 mm needed</span><div class="track"><div class="fill" style="width:100%;background:var(--flag)"></div><div class="limit" style="left:94.8%"></div></div></div>
       <div class="bar"><span>Plan A rail: 261 mm needed</span><div class="track"><div class="fill" style="width:90.9%;background:var(--structure)"></div><div class="limit" style="left:94.8%"></div></div></div>
       <span style="color:var(--ink-muted)">Black line = 272 mm available under the plywood; the rest of the Plan B rail is inside the hood</span>
     </div>
@@ -188,7 +188,7 @@
         <tbody id="bom"></tbody>
       </table>
     </div>
-    <p class="note">Plan B model: puck loads at 22 mm (client tray level), top of stroke 327 mm, tee surface 300 mm and plywood 18 mm from the client’s STEP. "Typical part" names are common off-the-shelf types for sizing and quoting, not a final selection. The funnel channel is shown as the straight end section the client's funnel must finish with.</p>
+    <p class="note">Plan B model: puck loads at 26 mm (client tray level), top of stroke 327 mm, tee surface 300 mm and plywood 18 mm from the client’s STEP. "Typical part" names are common off-the-shelf types for sizing and quoting, not a final selection. The funnel channel is shown as the straight end section the client's funnel must finish with.</p>
   </section>
 </div>
 
@@ -200,12 +200,12 @@
     {id:'tube',   name:'Lift tube',            spec:'Clear PC Ø56 × 3 mm, 272 mm long, 10 mm drive slot + 50 × 55 mm side window', ex:'Polycarbonate tube Ø56/50', role:'Guides the ball and plunger; you can see the ball rise.'},
     {id:'plunger',name:'Puck',              spec:'Puck Ø49 × 8–17 mm (replaces the 80 mm plunger), top face tilted 10° toward the exit', ex:'POM-C or PA12-CF', role:'Carries the ball from tray level; the tilt rolls it out at the top.'},
     {id:'arm',    name:'Drive arm',            spec:'5 mm aluminium L-bracket: drops 30 mm from the carriage and enters the tube slot', ex:'EN AW-6082 T6', role:'Links puck to carriage; stops the puck turning.'},
-    {id:'rail',   name:'Linear rail + carriage',spec:'Rail 340 mm (Z 28→368); top 68 mm rises through a 42 × 32 slot in the ply', ex:'MGN9 rail + MGN9C block', role:'Keeps the lift straight and smooth.'},
+    {id:'rail',   name:'Linear rail + carriage',spec:'Rail 336 mm (Z 33→368); top 68 mm rises through a 42 × 32 slot in the ply', ex:'MGN9 rail + MGN9C block', role:'Keeps the lift straight and smooth.'},
     {id:'belt',   name:'Toothed belt + pulleys',spec:'6 mm belt, 20-tooth motor pulley (bottom) and idler (top, inside the hood), 320 mm centres', ex:'GT2 6 mm, GT2-20T', role:'Turns motor rotation into up/down travel (40 mm per turn).'},
     {id:'motor',  name:'Stepper motor',        spec:'42 × 42 × 40 mm, ~0.4 N·m holding, 24 V', ex:'NEMA17 + TMC2209 driver', role:'Drives the lift; current-limited to ≤ 50 N push, stall detection.'},
     {id:'plate',  name:'Mounting plate + base',spec:'5 mm plate 270 × 120 mm on a 6 mm base 220 × 200 mm, rubber feet', ex:'EN AW-6082 / 5754', role:'Holds tube, rail and motor in line; fixes to the frame.'},
-    {id:'gates',  name:'Gate solenoids (×2)',  spec:'Same Ø6 pins through the floor as Plan A, 55 mm pitch; the floor is ~24 mm up, so each solenoid sits beside the channel and pulls its pin down via a bell-crank', ex:'JF-0530B class', role:'Let exactly one ball at a time onto the puck.'},
-    {id:'channel',name:'Funnel end channel',   spec:'50 mm U-channel, floor 24 mm above the slab at the tube, 5° gate section, then follows the client’s 3° tray', ex:'Client funnel / ply or PETG', role:'Queues balls from all holes to the lift.'},
+    {id:'gates',  name:'Gate solenoids (×2)',  spec:'Same Ø6 pins through the floor as Plan A, 55 mm pitch; the floor is ~28 mm up, so each solenoid sits beside the channel and pulls its pin down via a bell-crank', ex:'JF-0530B class', role:'Let exactly one ball at a time onto the puck.'},
+    {id:'channel',name:'Funnel end channel',   spec:'50 mm U-channel, floor 28 mm above the slab at the tube, 5° gate section, then follows the client’s 3° tray', ex:'Client funnel / ply or PETG', role:'Queues balls from all holes to the lift.'},
     {id:'sensors',name:'Sensors',              spec:'Home switch at the bottom of the rail, IR beam across the tube at load height', ex:'Slotted opto + IR pair', role:'Home position; confirms one ball is loaded.'},
     {id:'hood',   name:'Hood',                 spec:'1.5 mm sheet, 120 × 100 mm (longer, covers the drive tower), 75 mm high at the back rising to 95 mm at the opening', ex:'Stainless or powder-coated Al', role:'Covers the hole and the top of the drive; roof deflects the ball outward.'},
     {id:'wedge',  name:'Exit wedge + tray',    spec:'Wedge 100 mm, 22 mm drop; tray 225 mm for 5 balls with 15 mm stop', ex:'POM or hardwood; Al rails', role:'Gives the ball its roll and keeps balls ready to putt.'},
@@ -266,7 +266,7 @@
   var slab = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400), M.slab); slab.rotation.x = -Math.PI / 2; slab.receiveShadow = true; scene.add(slab);
 
   // ---------------- geometry (x = exit direction, z- = drive side, y up, slab y = 0) ----------------
-  var FACE_DN = 21.8, FACE_UP = 327, TILT = 10 * Math.PI / 180, BR = 21.35, PLY_B = 282, SURF = 300;
+  var FACE_DN = 26.1, FACE_UP = 327, TILT = 10 * Math.PI / 180, BR = 21.35, PLY_B = 282, SURF = 300;
 
   // base + mounting plate
   add('plate', BX(220, 6, 200), M.alu, 20, 7, -25);
@@ -290,7 +290,7 @@
     });
   }
   var SLOT = [Math.PI, 5 / 28], WIN = [3 * Math.PI / 2, 25 / 28];
-  arcTube(2, 20.8, [SLOT]); arcTube(20.8, 83.8, [SLOT, WIN]); arcTube(83.8, PLY_B, [SLOT]);
+  arcTube(2, 25.1, [SLOT]); arcTube(25.1, 88.1, [SLOT, WIN]); arcTube(88.1, PLY_B, [SLOT]);
   // tube clamps
   [60, 230].forEach(function(y){
     add('tube', new THREE.TorusGeometry(29.5, 2.2, 10, 40, Math.PI * 1.6), M.alu, 0, y, 0, [Math.PI / 2, 0, Math.PI * 0.7]);
@@ -323,8 +323,8 @@
   partMats.arm = [arm1.material, arm2.material, arm3.material]; arm1.castShadow = arm2.castShadow = arm3.castShadow = true;
 
   // rail + carriage (carriage moves)
-  add('rail', BX(9, 340.2, 6.5), M.steel, 0, 198.4, -56.75);
-  for (var yb = 34; yb < 364; yb += 20){ add('rail', CY(2.2, 2.2, 1, 12), M.black, 0, yb, -53.4, [Math.PI / 2, 0, 0]); }
+  add('rail', BX(9, 335.9, 6.5), M.steel, 0, 200.6, -56.75);
+  for (var yb = 39; yb < 364; yb += 20){ add('rail', CY(2.2, 2.2, 1, 12), M.black, 0, yb, -53.4, [Math.PI / 2, 0, 0]); }
   var carG = new THREE.Group(); G.rail.add(carG);
   var car = new THREE.Mesh(BX(20, 29, 10), M.steel.clone()); car.position.set(0, 0, -48.5); carG.add(car);
   var carEnd = new THREE.Mesh(BX(20, 3, 10), M.red.clone()); carEnd.position.set(0, 16, -48.5); carG.add(carEnd);
@@ -371,7 +371,7 @@
   add('motor', BX(8, 5, 8), M.black, 70, 18, -95);
 
   // funnel end channel (-x side), floor rising 10° away from the tube
-  var chanLen = 170, CH0 = -26, chanFloor = function(x){ return 23.8 + (CH0 - x) * Math.tan(5 * Math.PI / 180); };
+  var chanLen = 170, CH0 = -26, chanFloor = function(x){ return 28.1 + (CH0 - x) * Math.tan(5 * Math.PI / 180); };
   var chG = new THREE.Group(); G.channel.add(chG);
   var chMid = CH0 - chanLen / 2, chAng = 5 * Math.PI / 180;
   var chFloor = new THREE.Mesh(BX(chanLen, 3, 52), M.wood.clone()); chFloor.position.set(chMid, chanFloor(chMid) - 1.5, 0); chFloor.rotation.z = -chAng; chG.add(chFloor);
@@ -427,7 +427,7 @@
 
   // ---------------- cycle animation ----------------
   var PH = [ // name, duration
-    ['Waiting', 0.7], ['Lower gate pin drops: ball rolls onto the puck', 0.7], ['Belt lifts the puck 305 mm', 2.6],
+    ['Waiting', 0.7], ['Lower gate pin drops: ball rolls onto the puck', 0.7], ['Belt lifts the puck 301 mm', 2.6],
     ['Face clears the lip: ball rolls out', 0.9], ['Ball joins the tray', 0.3], ['Puck returns down', 2.6], ['Upper gate lets the next ball in', 0.6]
   ];
   var cyc = {i:0, t:0, n:0}, playing = true;
