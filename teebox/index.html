@@ -171,7 +171,7 @@
   <div>
     <div class="eyebrow">Ball return &amp; dispensing · Issue 3 concept</div>
     <h1>13 holes, one funnel, one lift</h1>
-    <p class="sub">Whichever of the 13 holes the ball drops into, it lands on the client's V-funnel under the 3° deck, rolls down the funnel's valley to its single outlet, and runs through a short tube to two solenoid gates. A vertical plunger then lifts it into a small hood. It rolls down a wedge into a tray, and the tray keeps up to five balls ready to putt. The lift stops when the tray is full.</p>
+    <p class="sub">Whichever of the 13 holes the ball drops into, it lands on the client's sloping collection tray under the deck. Gravity alone rolls it straight down to the tray's bottom edge, then along that edge to the single outlet, like water poured on a tilted board, and on through a short straight channel to two gates. A vertical plunger then lifts it into a small hood. It rolls down a wedge into a tray, and the tray keeps up to five balls ready to putt. The lift stops when the tray is full.</p>
   </div>
 
   <div class="stage" id="stage">
@@ -236,7 +236,7 @@
     <div class="stat"><span class="k">Exit wedge</span><span class="v">22 mm<span>drop → ~0.56 m/s</span></span></div>
     <div class="stat"><span class="k">Tray</span><span class="v">5<span>balls ready</span></span></div>
   </div>
-  <p class="note">Concept model to the Issue 2/3 numbers: tee box and 2000 mm deck at 3° from the client's CAD; the 13-hole layout, cup depth and the funnel shape (drawn here extended under the whole deck, with its valley falling about 4.5° to the outlet) are placeholders until the client confirms them. The deck and tee box are drawn see-through so the return path and the lift are visible.</p>
+  <p class="note">Concept model to the Issue 2/3 numbers: tee box and 2000 mm deck at 3° from the client's CAD; the 13-hole layout, cup depth and the tray shape (drawn here as one surface under the whole deck, falling toward the tee box, with its bottom edge falling toward our funnel) are placeholders until the client confirms them. The deck and tee box are drawn see-through so the return path and the lift are visible.</p>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -335,28 +335,38 @@
   // back gutter for missed balls
   box(0.4, 0.3, TB_W - 0.4, mat(0x9aa3a8, {a:0.5}), TB_L + DECK_L - 0.3, deckTop(TB_L + DECK_L) - 0.95, 0);
 
-  // ---------- client funnel: one V-funnel under the whole deck -> one outlet ----------
+  // ---------- client collection tray: one sloping surface, no lanes ----------
+  // The tray falls toward the tee box. Its bottom edge (against a low wall) is angled in plan so that it falls
+  // toward our funnel from both sides: a ball rolls straight down to the edge, then along the edge, by gravity only.
   var OUT_X = 7.2, OUT_Y = 1.55, FAR_X = 27.9, FAR_Y = 3.2;
-  function valleyY(x){ return OUT_Y + (x - OUT_X) * (FAR_Y - OUT_Y) / (FAR_X - OUT_X); }
-  function valleyZ(x){ return LZ; }                // low edge runs straight along the lift side (client re-route)
-  function funnelY(x, z){ return Math.min(valleyY(x) + Math.abs(z - valleyZ(x)) * 0.15, deckTop(x) - CUP_D - 0.1); }
+  var ALONG = (FAR_Y - OUT_Y) / (FAR_X - OUT_X);         // fall toward the tee box
+  var EDGE_K = 0.6;                                        // bottom edge sets back 0.6 per unit away from our funnel
+  function trayY(x){ return OUT_Y + (x - OUT_X) * ALONG; }
+  function edgeX(z){ return OUT_X + Math.abs(z - LZ) * EDGE_K; }
+  function valleyY(x){ return trayY(x); }
+  function valleyZ(x){ return LZ; }
+  function funnelY(x, z){ return Math.min(trayY(x), deckTop(x) - CUP_D - 0.1); }
   (function(){
-    var nx = 42, nz = 20, x0 = OUT_X, x1 = FAR_X, z0 = -TB_W / 2 + 0.1, z1 = TB_W / 2 - 0.1, pos = [], idx = [];
-    for (var i = 0; i <= nx; i++) for (var j = 0; j <= nz; j++){
-      var x = x0 + (x1 - x0) * i / nx, z = z0 + (z1 - z0) * j / nz;
-      var t = Math.max(0, 1 - (x - x0) / 2.2);            // pinch the mouth into the outlet
-      var zz = z + (valleyZ(x) - z) * t * 0.85;
-      pos.push(x, funnelY(x, zz), zz);
+    var nx = 40, nz = 28, pos = [], idx = [];
+    for (var j = 0; j <= nz; j++) for (var i = 0; i <= nx; i++){
+      var z = -TB_W / 2 + 0.1 + (TB_W - 0.2) * j / nz, xe = edgeX(z), x = xe + (FAR_X - xe) * i / nx;
+      pos.push(x, funnelY(x, z), z);
     }
-    for (i = 0; i < nx; i++) for (j = 0; j < nz; j++){
-      var a = i * (nz + 1) + j, b = a + nz + 1;
-      idx.push(a, b, a + 1, b, b + 1, a + 1);
+    for (j = 0; j < nz; j++) for (i = 0; i < nx; i++){
+      var a = j * (nx + 1) + i, b = a + nx + 1;
+      idx.push(a, a + 1, b, b, a + 1, b + 1);
     }
     var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
     scene.add(new THREE.Mesh(g, mat(0xC49A62, {a:0.8, ds:true, r:0.85})));
-    // valley line
-    var vl = []; for (var k = 0; k <= 30; k++){ var xx = OUT_X + (FAR_X - OUT_X) * k / 30; vl.push(new THREE.Vector3(xx, valleyY(xx) + 0.01, valleyZ(xx))); }
-    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(vl), new THREE.LineBasicMaterial({color:0x8a6a3c})));
+    // low wall along the bottom edge (the "edge" the balls roll along)
+    var wp = [], wi = [], n = 40;
+    for (var k = 0; k <= n; k++){
+      var zz = -TB_W / 2 + 0.1 + (TB_W - 0.2) * k / n, xx = edgeX(zz), yy = funnelY(xx, zz);
+      wp.push(xx, yy - 0.02, zz, xx, yy + 0.35, zz);
+      if (k < n){ var q = 2 * k; wi.push(q, q + 1, q + 2, q + 1, q + 3, q + 2); }
+    }
+    var wg = new THREE.BufferGeometry(); wg.setAttribute('position', new THREE.Float32BufferAttribute(wp, 3)); wg.setIndex(wi); wg.computeVertexNormals();
+    scene.add(new THREE.Mesh(wg, mat(0x9C6B3A, {a:0.85, ds:true, r:0.8})));
   })();
 
   // ---------- return paths ----------
@@ -372,26 +382,18 @@
   // the queue lines up back along the valley (shared by every hole)
   var retCurve = new THREE.CatmullRomCurve3([vp(FAR_X - 0.5)].concat(valleyFrom(FAR_X - 0.5)));
   var retLen = retCurve.getLength();
-  // A ball stays on its own side of the V-funnel and rolls back toward the tee box; it only merges with
-  // the others where the funnel pinches into its single outlet (the same mouth shape as the drawn surface).
-  var PINCH = 2.2;
-  // Downhill path on the funnel: across-slope 0.15, along-slope (FAR_Y-OUT_Y)/(FAR_X-OUT_X), so the ball runs
-  // diagonally until it meets the low edge (lift side), then rolls along that edge to our funnel end.
-  var CROSS = 0.15, ALONG = (FAR_Y - OUT_Y) / (FAR_X - OUT_X), RATIO = CROSS / ALONG;
+  // Gravity only: straight down the tray on the ball's own side until it meets the bottom edge,
+  // then along the edge (which falls toward our funnel) to the outlet.
   function flowPath(xStart, z0){
-    var pts = [], z = z0, dx = 0.25;
-    for (var x = xStart; x > OUT_X + 0.05; x -= dx){
-      var gap = LZ - z;
-      if (Math.abs(gap) > 1e-3){ z += Math.sign(gap) * Math.min(Math.abs(gap), dx * RATIO); }
-      pts.push(new THREE.Vector3(x, funnelY(x, z) + BR, z));
+    var pts = [], xe = edgeX(z0) + BR * 1.15;
+    for (var x = xStart; x > xe; x -= 0.5) pts.push(new THREE.Vector3(x, funnelY(x, z0) + BR, z0));
+    var dz = LZ - z0, n = Math.max(1, Math.ceil(Math.abs(dz) / 0.25));
+    for (var k = 0; k <= n; k++){
+      var z = z0 + dz * k / n, xx = edgeX(z) + BR * 1.15;
+      pts.push(new THREE.Vector3(xx, funnelY(xx, z) + BR, z));
     }
     return pts.concat(TAIL);
   }
-  // mark the low edge the balls collect on
-  (function(){
-    var e = []; for (var k = 0; k <= 40; k++){ var xx = OUT_X + (FAR_X - OUT_X) * k / 40; e.push(new THREE.Vector3(xx, valleyY(xx) + 0.02, LZ)); }
-    scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(e), 60, 0.035, 6, false), new THREE.MeshBasicMaterial({color:0x8a4b14})));
-  })();
   HOLES.forEach(function(h){
     var y = deckTop(h.x);
     h.curve = new THREE.CatmullRomCurve3([
