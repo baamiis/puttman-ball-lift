@@ -4,7 +4,9 @@
 <style>
   .pnav{max-width:1240px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
     font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px}
+  .pnav .brand{display:flex;flex-direction:column;gap:3px}
   .pnav .home{color:var(--ink,#1A241D);text-decoration:none;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+  .pnav .author{font-family:"Public Sans",-apple-system,"Segoe UI",sans-serif;font-size:14px;font-weight:600;color:var(--accent,#B5602A)}
   .pnav .tabs{display:flex;gap:6px;flex-wrap:wrap;background:var(--surface-2,#EFEBDD);border:1px solid var(--line,#DDD6C2);border-radius:999px;padding:4px}
   .pnav .tabs a{color:var(--ink-muted,#5E6B60);text-decoration:none;padding:7px 14px;border-radius:999px;white-space:nowrap}
   .pnav .tabs a:hover{color:var(--ink,#1A241D)}
@@ -12,7 +14,7 @@
   .pnav a:focus-visible{outline:2px solid var(--accent,#B5602A);outline-offset:2px}
 </style>
 </head><body>
-<nav class="pnav" aria-label="Pages"><a class="home" href="../">Puttman · ball lift</a><span class="tabs"><a href="../teebox/" aria-current="page">The whole course</a><a href="../lift/">Inside the lift</a></span></nav>
+<nav class="pnav" aria-label="Pages"><span class="brand"><a class="home" href="../">Puttman · ball lift</a><span class="author">Khalid Hamdoun</span></span><span class="tabs"><a href="../teebox/" aria-current="page">The whole course</a><a href="../lift/">Inside the lift</a></span></nav>
 <style>
   :root{
     --bg:#F6F4EC; --surface:#FFFFFF; --surface-2:#EFEBDD;
