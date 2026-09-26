@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Puttman Ball Lift</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{--bg:#F6F4EC;--surface:#FFFFFF;--surface-2:#EFEBDD;--ink-muted:#5E6B60;--ink:#1A241D;--muted:#5E6B60;--line:#DDD6C2;--accent:#B5602A;--structure:#2E6B4C}
+  @media (prefers-color-scheme: dark){:root{color-scheme:dark;--bg:#10150F;--surface:#171D16;--surface-2:#1E2620;--ink-muted:#9FAC9F;--ink:#ECEFE8;--muted:#9FAC9F;--line:#2B342C;--accent:#E28A4C;--structure:#58A87C}}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans",-apple-system,"Segoe UI",sans-serif;padding-inline:clamp(16px,5vw,56px);padding-block:clamp(28px,6vw,64px)}
+  .wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+  .eyebrow{font:500 12px "IBM Plex Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--structure)}
+  h1{font-family:"Big Shoulders Display","Arial Narrow",sans-serif;font-weight:800;font-size:clamp(34px,6vw,56px);line-height:.95;margin:8px 0 0;text-wrap:balance}
+  p.lead{color:var(--muted);font-size:17px;line-height:1.55;max-width:62ch;margin:12px 0 0}
+  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  @media (max-width:700px){.cards{grid-template-columns:1fr}}
+  a.card{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px}
+  a.card:hover{border-color:var(--accent)}
+  a.card:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  .k{font:500 11px "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+  h2{font-family:"Big Shoulders Display","Arial Narrow",sans-serif;font-weight:800;font-size:28px;line-height:1;margin:0}
+  .card p{margin:0;color:var(--muted);line-height:1.5}
+  .go{margin-top:auto;font:600 13px "IBM Plex Mono",monospace;color:var(--structure)}
+  footer{font-size:12.5px;color:var(--muted)}
+</style>
+<style>
+  .pnav{max-width:1240px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px}
+  .pnav .home{color:var(--ink,#1A241D);text-decoration:none;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+  .pnav .tabs{display:flex;gap:6px;flex-wrap:wrap;background:var(--surface-2,#EFEBDD);border:1px solid var(--line,#DDD6C2);border-radius:999px;padding:4px}
+  .pnav .tabs a{color:var(--ink-muted,#5E6B60);text-decoration:none;padding:7px 14px;border-radius:999px;white-space:nowrap}
+  .pnav .tabs a:hover{color:var(--ink,#1A241D)}
+  .pnav .tabs a[aria-current="page"]{background:var(--structure,#2E6B4C);color:#fff}
+  .pnav a:focus-visible{outline:2px solid var(--accent,#B5602A);outline-offset:2px}
+</style>
+</head><body>
+<nav class="pnav" aria-label="Pages"><a class="home" href="./">Puttman · ball lift</a><span class="tabs"><a href="teebox/">The whole course</a><a href="lift/">Inside the lift</a></span></nav>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Puttman · ball return concept</div>
+    <h1>Vertical pop-up ball lift</h1>
+    <p class="lead">Two interactive 3D models. Drag to rotate, scroll or pinch to zoom. They work on a phone too, but a laptop shows more.</p>
+  </header>
+  <div class="cards">
+    <a class="card" href="teebox/">
+      <span class="k">Simulation 1</span>
+      <h2>The whole course in play</h2>
+      <p>Putt into any of the 13 holes and follow the ball back under the deck, through the funnel and the gates, up the lift and into the tray at the tee box.</p>
+      <span class="go">Open simulation →</span>
+    </a>
+    <a class="card" href="lift/">
+      <span class="k">Simulation 2</span>
+      <h2>Inside the lift</h2>
+      <p>The lift mechanism to scale: tube, plunger, rail, belt, motor, gates and sensors, with an animated cycle, an exploded view and the parts list.</p>
+      <span class="go">Open model →</span>
+    </a>
+  </div>
+  <footer>Concept models for discussion. Hole layout, cup depth and funnel shape to be confirmed.</footer>
+</div>
+</body></html>

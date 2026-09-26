@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Puttman Tee Box Lift</title>
+<style>
+  .pnav{max-width:1240px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px}
+  .pnav .home{color:var(--ink,#1A241D);text-decoration:none;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+  .pnav .tabs{display:flex;gap:6px;flex-wrap:wrap;background:var(--surface-2,#EFEBDD);border:1px solid var(--line,#DDD6C2);border-radius:999px;padding:4px}
+  .pnav .tabs a{color:var(--ink-muted,#5E6B60);text-decoration:none;padding:7px 14px;border-radius:999px;white-space:nowrap}
+  .pnav .tabs a:hover{color:var(--ink,#1A241D)}
+  .pnav .tabs a[aria-current="page"]{background:var(--structure,#2E6B4C);color:#fff}
+  .pnav a:focus-visible{outline:2px solid var(--accent,#B5602A);outline-offset:2px}
+</style>
+</head><body>
+<nav class="pnav" aria-label="Pages"><a class="home" href="../">Puttman · ball lift</a><span class="tabs"><a href="../teebox/" aria-current="page">The whole course</a><a href="../lift/">Inside the lift</a></span></nav>
+<style>
+  :root{
+    --bg:#F6F4EC; --surface:#FFFFFF; --surface-2:#EFEBDD;
+    --ink:#1A241D; --ink-muted:#5E6B60; --line:#DDD6C2;
+    --accent:#B5602A; --accent-soft:#F1E1D0;
+    --structure:#2E6B4C; --structure-soft:#DCEAE0;
+    --flag:#B23A26; --flag-soft:#F5DDD6;
+    --stage:#E9E6DC; --stage-ink:#2b2f2c;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --bg:#10150F; --surface:#171D16; --surface-2:#1E2620;
+      --ink:#ECEFE8; --ink-muted:#9FAC9F; --line:#2B342C;
+      --accent:#E28A4C; --accent-soft:#3A2A1C;
+      --structure:#58A87C; --structure-soft:#1E3327;
+      --flag:#E2624A; --flag-soft:#3B211B;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#10150F; --surface:#171D16; --surface-2:#1E2620;
+    --ink:#ECEFE8; --ink-muted:#9FAC9F; --line:#2B342C;
+    --accent:#E28A4C; --accent-soft:#3A2A1C;
+    --structure:#58A87C; --structure-soft:#1E3327;
+    --flag:#E2624A; --flag-soft:#3B211B;
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--ink); margin:0;
+    font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    padding-inline:clamp(16px,4vw,48px);
+    padding-block:clamp(20px,4vw,40px);
+  }
+  .wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--structure);display:flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--structure)}
+  h1{
+    font-family:"Big Shoulders Display","Arial Narrow",sans-serif;font-weight:800;
+    font-size:clamp(28px,4vw,42px);line-height:1;margin:6px 0 0 0;text-wrap:balance;
+  }
+  .sub{color:var(--ink-muted);font-size:clamp(14px,1.5vw,16px);line-height:1.55;max-width:72ch;margin:8px 0 0}
+
+  .stage{
+    position:relative;background:var(--stage);border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;height:min(66vh,640px);min-height:360px;
+  }
+  .stage canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+  .stage canvas:active{cursor:grabbing}
+  .panel{
+    position:absolute;top:14px;left:14px;
+    background:rgba(255,255,255,.88);
+    border:1px solid #DDD6C2;border-radius:10px;
+    padding:10px 14px;backdrop-filter:blur(4px);
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--stage-ink);
+    display:flex;flex-direction:column;gap:3px;max-width:250px;
+  }
+  .panel b{font-size:13px;color:#141413}
+  .views{position:absolute;top:14px;right:14px;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .views button{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;color:#2b2f2c;cursor:pointer;
+    background:rgba(255,255,255,.88);border:1px solid #DDD6C2;border-radius:999px;padding:6px 11px;
+  }
+  .views button[aria-pressed="true"]{background:#2E6B4C;color:#fff;border-color:#2E6B4C}
+  .views button:focus-visible,.hit-btn:focus-visible,.apply-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .hint,.count{
+    position:absolute;bottom:12px;
+    font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:#4b504b;
+    background:rgba(255,255,255,.85);padding:6px 10px;border-radius:999px;border:1px solid #DDD6C2;
+  }
+  .hint{right:14px}
+  .count{left:14px;font-size:11px}
+  @media (max-width:600px){.panel{display:none}.hint{display:none}}
+
+  .play{
+    background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    padding:16px 18px;display:flex;flex-direction:column;gap:14px;
+  }
+  .play-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  .hit-btn{
+    font-family:"Big Shoulders Display",sans-serif;font-weight:800;font-size:16px;
+    letter-spacing:.03em;color:#fff;background:var(--accent);border:none;border-radius:8px;
+    padding:12px 26px;cursor:pointer;flex-shrink:0;
+  }
+  .hit-btn:disabled{background:var(--surface-2);color:var(--ink-muted);cursor:default}
+  .hit-btn:not(:disabled):hover{filter:brightness(1.08)}
+  .aim{display:flex;align-items:center;gap:8px;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted)}
+  .aim select{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:6px;padding:7px 9px}
+  .status-line{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-muted);flex:1;min-width:200px}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chip{
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;padding:5px 10px;border-radius:999px;
+    border:1px solid var(--line);background:var(--surface-2);color:var(--ink-muted);
+    font-variant-numeric:tabular-nums;
+  }
+  .chip b{color:var(--ink);font-weight:600}
+  .chip.full{background:var(--structure-soft);border-color:var(--structure);color:var(--structure)}
+  .chip.full b{color:var(--structure)}
+  .chip.busy{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+  .chip.busy b{color:var(--accent)}
+  .chip.made b{color:var(--structure)}
+  .chip.miss b{color:var(--flag)}
+
+  .params-head{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .params-title{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted)}
+  .apply-btn{
+    font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12px;letter-spacing:.03em;
+    color:#fff;background:var(--structure);border:none;border-radius:7px;padding:8px 16px;cursor:pointer;
+  }
+  .apply-btn:hover{filter:brightness(1.08)}
+  .params-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px 14px}
+  @media (max-width:860px){.params-grid{grid-template-columns:1fr 1fr}}
+  .params-grid label{
+    display:flex;flex-direction:column;gap:4px;
+    font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--ink-muted);
+  }
+  .params-grid input{
+    font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink);
+    background:var(--surface-2);border:1px solid var(--line);border-radius:6px;
+    padding:7px 9px;width:100%;
+  }
+
+  .legend{
+    display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  }
+  @media (max-width:760px){.legend{grid-template-columns:1fr 1fr}}
+  .stat{background:var(--surface);padding:13px 15px;display:flex;flex-direction:column;gap:3px}
+  .stat .k{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted)}
+  .stat .v{font-family:"Big Shoulders Display",sans-serif;font-weight:700;font-size:20px;color:var(--ink)}
+  .stat .v span{color:var(--structure);font-size:12.5px;font-family:"IBM Plex Mono",monospace;font-weight:500;margin-left:4px}
+  .note{font-size:12.5px;color:var(--ink-muted);line-height:1.5;max-width:90ch;margin:0}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<div class="wrap">
+  <div>
+    <div class="eyebrow">Ball return &amp; dispensing · Issue 3 concept</div>
+    <h1>13 holes, one funnel, one lift</h1>
+    <p class="sub">Whichever of the 13 holes the ball drops into, it lands on the client's V-funnel under the 3° deck, rolls down the funnel's valley to its single outlet, and runs through a short tube to two solenoid gates. A vertical plunger then lifts it into a small hood. It rolls down a wedge into a tray, and the tray keeps up to five balls ready to putt. The lift stops when the tray is full.</p>
+  </div>
+
+  <div class="stage" id="stage">
+    <canvas id="c" aria-label="3D simulation of the tee box ball lift"></canvas>
+    <div class="panel">
+      <b>Tee box 818 × 1000 × 300 mm</b>
+      <span>13 holes → client funnel → tube → 2 gates → plunger (232 mm) → hood → wedge → tray</span>
+    </div>
+    <div class="views" role="group" aria-label="Camera view">
+      <button type="button" id="viewTee" aria-pressed="false">Tee box</button>
+      <button type="button" id="viewLift" aria-pressed="false">Lift close-up</button>
+      <button type="button" id="viewAll" aria-pressed="true">Whole platform</button>
+      <button type="button" id="viewFunnel" aria-pressed="false">Under the deck</button>
+    </div>
+    <div class="count" id="count">Lift: idle</div>
+    <div class="hint">Drag to rotate · Scroll or pinch to zoom</div>
+  </div>
+
+  <div class="play">
+    <div class="play-row">
+      <button class="hit-btn" id="hitBtn" type="button">HIT BALL</button>
+      <label class="aim" for="pAim">Aim at
+        <select id="pAim"><option value="rand">Random hole</option></select>
+      </label>
+      <div class="status-line" id="statusLine">Tray full. Press Hit to take a ball and putt.</div>
+    </div>
+    <div class="chips">
+      <span class="chip" id="chipTray">Tray <b>5/5</b></span>
+      <span class="chip" id="chipQueue">At the gates <b>0</b></span>
+      <span class="chip" id="chipTransit">Returning <b>0</b></span>
+      <span class="chip" id="chipLift">Lift <b>idle</b></span>
+      <span class="chip made" id="chipMade">Holed <b>0</b></span>
+      <span class="chip miss" id="chipMiss">Missed <b>0</b></span>
+      <span class="chip" id="chipLast">Last <b>–</b></span>
+    </div>
+  </div>
+
+  <div class="play">
+    <div class="params-head">
+      <span class="params-title">Simulation parameters</span>
+      <button class="apply-btn" id="applyBtn" type="button">Apply &amp; reset</button>
+    </div>
+    <div class="params-grid">
+      <label for="pStroke">Lift stroke time (s)<input type="number" id="pStroke" value="2.0" min="0.5" max="5" step="0.1"></label>
+      <label for="pReturn">Return transit (s)<input type="number" id="pReturn" value="6.0" min="2" max="15" step="0.5"></label>
+      <label for="pMade">Holed probability (%)<input type="number" id="pMade" value="40" min="0" max="100" step="5"></label>
+      <label for="pBalls">Ball pool size<input type="number" id="pBalls" value="10" min="1" max="20" step="1"></label>
+      <label for="pTray">Tray capacity<input type="number" id="pTray" value="5" min="1" max="5" step="1"></label>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="stat"><span class="k">Holes</span><span class="v">13<span>one funnel, one outlet</span></span></div>
+    <div class="stat"><span class="k">Lift</span><span class="v">232 mm<span>vertical stroke</span></span></div>
+    <div class="stat"><span class="k">Hood</span><span class="v">75–95 mm<span>roof rises to exit</span></span></div>
+    <div class="stat"><span class="k">Exit wedge</span><span class="v">22 mm<span>drop → ~0.56 m/s</span></span></div>
+    <div class="stat"><span class="k">Tray</span><span class="v">5<span>balls ready</span></span></div>
+  </div>
+  <p class="note">Concept model to the Issue 2/3 numbers: tee box and 2000 mm deck at 3° from the client's CAD; the 13-hole layout, cup depth and the funnel shape (drawn here extended under the whole deck, with its valley falling about 4.5° to the outlet) are placeholders until the client confirms them. The deck and tee box are drawn see-through so the return path and the lift are visible.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  // ---------- units: 1 = 100 mm ----------
+  var TB_L = 8.18, TB_W = 10, TB_H = 3.0, DECK_L = 20, SLOPE = 3 * Math.PI / 180;
+  var BR = 0.2135, BD = 0.427;
+  var LX = 2.4, LZ = 2.4;                 // lift axis (tee box plan position)
+  var FACE_DN = 0.95, FACE_UP = 3.27;     // plunger face heights
+  function deckTop(x){ return x <= TB_L ? TB_H : TB_H + (x - TB_L) * Math.tan(SLOPE); }
+
+  var canvas = document.getElementById('c');
+  var stage = document.getElementById('stage');
+  var renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  var scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xE9E6DC);
+  var camera = new THREE.PerspectiveCamera(40, 1, 0.05, 200);
+
+  scene.add(new THREE.AmbientLight(0xffffff, 0.62));
+  var key = new THREE.DirectionalLight(0xffffff, 0.85); key.position.set(10, 22, 14); scene.add(key);
+  var fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(-12, 8, -10); scene.add(fill);
+
+  function mat(color, o){
+    o = o || {};
+    return new THREE.MeshStandardMaterial({color:color, roughness:o.r == null ? 0.6 : o.r, metalness:o.m || 0,
+      transparent:o.a != null, opacity:o.a == null ? 1 : o.a, side:o.ds ? THREE.DoubleSide : THREE.FrontSide,
+      depthWrite:o.a == null});
+  }
+  function box(w, h, d, m, x, y, z){ var b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); scene.add(b); return b; }
+  function edges(geo, color, pos, rot){
+    var l = new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({color:color}));
+    if (pos) l.position.copy(pos); if (rot) l.rotation.copy(rot); scene.add(l); return l;
+  }
+
+  // ---------- floor ----------
+  var floor = new THREE.Mesh(new THREE.PlaneGeometry(60, 30), mat(0xCFCBC0, {r:0.95}));
+  floor.rotation.x = -Math.PI / 2; floor.position.set(12, -0.01, 0); scene.add(floor);
+
+  // ---------- tee box (see-through) ----------
+  var tbGeo = new THREE.BoxGeometry(TB_L, TB_H, TB_W);
+  edges(tbGeo, 0x8a7a5c, new THREE.Vector3(TB_L / 2, TB_H / 2, 0));
+  var tbTop = new THREE.Mesh(new THREE.BoxGeometry(TB_L, 0.18, TB_W), mat(0x3f8a58, {a:0.28, r:0.9}));
+  tbTop.position.set(TB_L / 2, TB_H - 0.09, 0); scene.add(tbTop);
+  // battens under the tee box top (every ~400 mm)
+  var battenMat = mat(0xD8B98A, {a:0.22});
+  for (var bx = 0.5; bx < TB_L; bx += 4.0){ box(0.45, 0.9, TB_W, battenMat, bx, TB_H - 0.63, 0); }
+  // lower step in front of the tee box (x < 0)
+  var stepGeo = new THREE.BoxGeometry(3, 1.5, TB_W);
+  edges(stepGeo, 0xa89a7c, new THREE.Vector3(-1.5, 0.75, 0));
+  var stepTop = new THREE.Mesh(new THREE.BoxGeometry(3, 0.12, TB_W), mat(0xC9B79C, {a:0.5})); stepTop.position.set(-1.5, 1.44, 0); scene.add(stepTop);
+
+  // ---------- sloped deck (see-through) ----------
+  var deckLen = DECK_L / Math.cos(SLOPE);
+  var deck = new THREE.Mesh(new THREE.BoxGeometry(deckLen, 0.18, TB_W), mat(0x3f8a58, {a:0.22, r:0.9}));
+  deck.position.set(TB_L + DECK_L / 2, (deckTop(TB_L) + deckTop(TB_L + DECK_L)) / 2 - 0.09, 0);
+  deck.rotation.z = SLOPE; scene.add(deck);
+  // deck side outline
+  var dPts = [new THREE.Vector3(TB_L, 0, -TB_W/2), new THREE.Vector3(TB_L + DECK_L, 0, -TB_W/2), new THREE.Vector3(TB_L + DECK_L, deckTop(TB_L + DECK_L), -TB_W/2), new THREE.Vector3(TB_L, TB_H, -TB_W/2)];
+  [ -1, 1 ].forEach(function(s){
+    var pts = dPts.map(function(p){ return new THREE.Vector3(p.x, p.y, s * TB_W / 2); });
+    pts.push(pts[0].clone());
+    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({color:0x8a7a5c})));
+  });
+  scene.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(TB_L + DECK_L, 0, -TB_W/2), new THREE.Vector3(TB_L + DECK_L, 0, TB_W/2),
+    new THREE.Vector3(TB_L + DECK_L, deckTop(TB_L + DECK_L), -TB_W/2), new THREE.Vector3(TB_L + DECK_L, deckTop(TB_L + DECK_L), TB_W/2)
+  ]), new THREE.LineBasicMaterial({color:0x8a7a5c})));
+
+  // ---------- 13 holes on the deck ----------
+  var CUP_D = 0.6;                        // cup sleeve depth below the deck surface (open bottom)
+  var HOLES = [];
+  [[11.5, [-3, 0, 3]], [15.2, [-1.6, 1.6]], [18.9, [-3, 0, 3]], [22.6, [-1.6, 1.6]], [26.3, [-3, 0, 3]]].forEach(function(row){
+    row[1].forEach(function(z){ HOLES.push({x:row[0], z:z}); });
+  });
+  function numSprite(n){
+    var c = document.createElement('canvas'); c.width = c.height = 64;
+    var g = c.getContext('2d');
+    g.fillStyle = '#ffffff'; g.beginPath(); g.arc(32, 32, 28, 0, Math.PI * 2); g.fill();
+    g.lineWidth = 4; g.strokeStyle = '#2E6B4C'; g.stroke();
+    g.fillStyle = '#1A241D'; g.font = 'bold 30px sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(String(n), 32, 34);
+    var sp = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c), depthTest:false}));
+    sp.scale.set(0.6, 0.6, 1); scene.add(sp); return sp;
+  }
+  HOLES.forEach(function(h, i){
+    var y = deckTop(h.x);
+    var sleeve = new THREE.Mesh(new THREE.CylinderGeometry(0.54, 0.54, CUP_D, 28, 1, true), mat(0x222222, {ds:true}));
+    sleeve.position.set(h.x, y - CUP_D / 2, h.z); scene.add(sleeve);
+    h.ring = new THREE.Mesh(new THREE.RingGeometry(0.54, 0.7, 28), new THREE.MeshBasicMaterial({color:0x111111, side:THREE.DoubleSide}));
+    h.ring.rotation.x = -Math.PI / 2; h.ring.position.set(h.x, y + 0.012, h.z); scene.add(h.ring);
+    h.label = numSprite(i + 1); h.label.position.set(h.x, y + 0.75, h.z);
+    h.flash = 0;
+  });
+
+  // back gutter for missed balls
+  box(0.4, 0.3, TB_W - 0.4, mat(0x9aa3a8, {a:0.5}), TB_L + DECK_L - 0.3, deckTop(TB_L + DECK_L) - 0.95, 0);
+
+  // ---------- client funnel: one V-funnel under the whole deck -> one outlet ----------
+  var OUT_X = 7.2, OUT_Y = 1.55, FAR_X = 27.9, FAR_Y = 3.2;
+  function valleyY(x){ return OUT_Y + (x - OUT_X) * (FAR_Y - OUT_Y) / (FAR_X - OUT_X); }
+  function valleyZ(x){ return LZ * (1 - (x - OUT_X) / (FAR_X - OUT_X)); }
+  function funnelY(x, z){ return Math.min(valleyY(x) + Math.abs(z - valleyZ(x)) * 0.15, deckTop(x) - CUP_D - 0.1); }
+  (function(){
+    var nx = 42, nz = 20, x0 = OUT_X, x1 = FAR_X, z0 = -TB_W / 2 + 0.1, z1 = TB_W / 2 - 0.1, pos = [], idx = [];
+    for (var i = 0; i <= nx; i++) for (var j = 0; j <= nz; j++){
+      var x = x0 + (x1 - x0) * i / nx, z = z0 + (z1 - z0) * j / nz;
+      var t = Math.max(0, 1 - (x - x0) / 2.2);            // pinch the mouth into the outlet
+      var zz = z + (valleyZ(x) - z) * t * 0.85;
+      pos.push(x, funnelY(x, zz), zz);
+    }
+    for (i = 0; i < nx; i++) for (j = 0; j < nz; j++){
+      var a = i * (nz + 1) + j, b = a + nz + 1;
+      idx.push(a, b, a + 1, b, b + 1, a + 1);
+    }
+    var g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
+    scene.add(new THREE.Mesh(g, mat(0xC49A62, {a:0.8, ds:true, r:0.85})));
+    // valley line
+    var vl = []; for (var k = 0; k <= 30; k++){ var xx = OUT_X + (FAR_X - OUT_X) * k / 30; vl.push(new THREE.Vector3(xx, valleyY(xx) + 0.01, valleyZ(xx))); }
+    scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(vl), new THREE.LineBasicMaterial({color:0x8a6a3c})));
+  })();
+
+  // ---------- return paths ----------
+  var glass = new THREE.MeshPhysicalMaterial({color:0xdfeef0, transparent:true, opacity:0.28, roughness:0.15, side:THREE.DoubleSide, depthWrite:false});
+  var Q0 = new THREE.Vector3(3.76, 1.20 + 0.176 * (3.76 - LX), LZ);        // stop point behind the upper gate
+  function vp(x){ return new THREE.Vector3(x, valleyY(x) + BR, valleyZ(x)); }
+  var TAIL = [new THREE.Vector3(OUT_X, OUT_Y + BR - 0.08, LZ), new THREE.Vector3(5.0, 1.42, LZ), Q0];
+  function valleyFrom(x){                      // valley points below x, then outlet -> tube -> gates
+    var pts = [];
+    for (var vx = 26; vx > OUT_X + 1.5; vx -= 4){ if (vx < x - 0.8) pts.push(vp(vx)); }
+    return pts.concat(TAIL);
+  }
+  // the queue lines up back along the valley (shared by every hole)
+  var retCurve = new THREE.CatmullRomCurve3([vp(FAR_X - 0.5)].concat(valleyFrom(FAR_X - 0.5)));
+  var retLen = retCurve.getLength();
+  HOLES.forEach(function(h){
+    var y = deckTop(h.x), fx = h.x - 1.2;
+    h.curve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(h.x, y - 0.05, h.z),
+      new THREE.Vector3(h.x, y - CUP_D, h.z),
+      new THREE.Vector3(h.x - 0.1, funnelY(h.x - 0.1, h.z) + BR, h.z),
+      new THREE.Vector3(fx, valleyY(fx) + BR, valleyZ(fx))
+    ].concat(valleyFrom(fx)));
+  });
+  var missCurve = new THREE.CatmullRomCurve3([
+    new THREE.Vector3(TB_L + DECK_L - 0.3, deckTop(TB_L + DECK_L) - 0.7, 0.4),
+    new THREE.Vector3(FAR_X - 0.3, funnelY(FAR_X - 0.3, 0.4) + BR, 0.4)
+  ].concat(valleyFrom(FAR_X - 0.3)));
+  // outlet -> gates tube (the "tube" in funnel -> tube -> plunger)
+  scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(TAIL), 30, 0.3, 14, false), glass));
+
+  // ---------- lift ----------
+  var tube = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, TB_H - 0.28, 22, 1, true), glass);
+  tube.position.set(LX, (TB_H - 0.18) / 2 + 0.05, LZ); scene.add(tube);
+  var plunger = new THREE.Mesh(new THREE.CylinderGeometry(0.245, 0.245, 0.8, 22), mat(0x455a64, {m:0.3, r:0.45}));
+  scene.add(plunger);
+  function setPlunger(face){ plunger.position.set(LX, face - 0.4, LZ); }
+  setPlunger(FACE_DN);
+  // drive beside the tube: rail + lead screw + motor
+  box(0.1, 2.8, 0.1, mat(0x90a4ae, {m:0.5}), LX, 1.5, LZ + 0.58);
+  var carriage = box(0.3, 0.35, 0.25, mat(0x78909c, {m:0.4}), LX, 1.0, LZ + 0.48);
+  box(0.42, 0.48, 0.42, mat(0x2E6B4C, {m:0.3}), LX, 0.35, LZ + 1.1);
+  // controller + PSU
+  box(3.0, 1.2, 1.3, mat(0xe8ecef, {a:0.8}), 5.0, 0.7, -3.2);
+  // gates (red blocks) on the straight channel
+  var gateX = [3.0, 3.5];
+  var gates = gateX.map(function(x){
+    return box(0.14, 0.26, 0.34, new THREE.MeshStandardMaterial({color:0xB23A26, roughness:0.5}), x, 1.2 + 0.176 * (x - LX) + 0.36, LZ);
+  });
+  var BUF = new THREE.Vector3(3.25, 1.20 + 0.176 * (3.25 - LX), LZ);
+  var LOAD = new THREE.Vector3(LX, FACE_DN + BR, LZ);
+  // short straight channel from the funnel to the tube
+  var chanCurve = new THREE.LineCurve3(new THREE.Vector3(LX + 0.25, 1.23, LZ), new THREE.Vector3(3.9, 1.46, LZ));
+  scene.add(new THREE.Mesh(new THREE.TubeGeometry(chanCurve, 8, 0.3, 14, false), glass));
+
+  // ---------- on top: hood, wedge, tray ----------
+  var hoodMat = mat(0xb0bec5, {a:0.45, m:0.3, ds:true});
+  var H0 = TB_H;
+  box(0.04, 0.75, 0.9, hoodMat, LX - 0.45, H0 + 0.375, LZ);          // back wall (low side of the roof)
+  box(0.87, 0.85, 0.04, hoodMat, LX - 0.015, H0 + 0.43, LZ - 0.45);  // side walls
+  box(0.87, 0.85, 0.04, hoodMat, LX - 0.015, H0 + 0.43, LZ + 0.45);
+  var roof = box(0.9, 0.04, 0.94, mat(0x78909c, {a:0.8, m:0.3}), LX - 0.02, H0 + 0.85, LZ);
+  roof.rotation.z = Math.atan(0.2 / 0.84);   // rises toward the exit, so it deflects the ball outward
+  // wedge (triangle prism)
+  var wShape = new THREE.Shape(); wShape.moveTo(0, 0); wShape.lineTo(0, 0.22); wShape.lineTo(1.0, 0); wShape.lineTo(0, 0);
+  var wedge = new THREE.Mesh(new THREE.ExtrudeGeometry(wShape, {depth:0.6, bevelEnabled:false}), mat(0x8d6e63));
+  wedge.position.set(LX + 0.3, H0, LZ - 0.3); scene.add(wedge);
+  var TRAY_X0 = LX + 1.3, TRAY_X1 = TRAY_X0 + 2.25;
+  box(TRAY_X1 - TRAY_X0, 0.1, 0.04, mat(0x607d8b, {m:0.3}), (TRAY_X0 + TRAY_X1) / 2, H0 + 0.05, LZ - 0.28);
+  box(TRAY_X1 - TRAY_X0, 0.1, 0.04, mat(0x607d8b, {m:0.3}), (TRAY_X0 + TRAY_X1) / 2, H0 + 0.05, LZ + 0.28);
+  box(0.08, 0.15, 0.6, mat(0x607d8b, {m:0.3}), TRAY_X1 + 0.04, H0 + 0.075, LZ);
+  var sensor = box(0.1, 0.1, 0.1, new THREE.MeshStandardMaterial({color:0xf57c00, emissive:0x000000}), TRAY_X0 + 0.1, H0 + 0.6, LZ + 0.35);
+  // putting spot
+  var SPOT = new THREE.Vector3(TRAY_X0 + 0.8, H0 + BR, 0.3);
+  var spotRing = new THREE.Mesh(new THREE.RingGeometry(0.24, 0.28, 24), new THREE.MeshBasicMaterial({color:0xffffff, side:THREE.DoubleSide, transparent:true, opacity:0.8}));
+  spotRing.rotation.x = -Math.PI / 2; spotRing.position.set(SPOT.x, H0 + 0.005, SPOT.z); scene.add(spotRing);
+
+  function traySlot(i){ return new THREE.Vector3(TRAY_X1 - BR - i * BD, H0 + BR, LZ); }
+
+  // ---------- balls & state ----------
+  var ballGeo = new THREE.SphereGeometry(BR, 20, 16);
+  var ballMat = new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.35});
+  var liveMat = new THREE.MeshStandardMaterial({color:0xfff59d, roughness:0.35});
+  function newBall(p){ var m = new THREE.Mesh(ballGeo, ballMat); m.position.copy(p); scene.add(m); return m; }
+
+  var P = {};              // params
+  var tray = [];           // meshes, index 0 at the stop rail
+  var trayReserved = 0;    // balls on their way into the tray
+  var queue = [];          // settled behind the upper gate, index 0 at Q0
+  var returning = [];      // {mesh, curve, len, s}
+  var bufferBall = null;   // between the gates
+  var gateMove = null;     // {mesh, from, to, t, dur, onDone}
+  var lift = {state:'idle', t:0, ball:null};
+  var play = null;         // the ball being played {mesh, phase, t, made}
+  var madeN = 0, missN = 0;
+  var allBalls = [];
+
+  function readParams(){
+    function num(id, d, lo, hi){ var v = parseFloat(document.getElementById(id).value); if (isNaN(v)) v = d; return Math.min(hi, Math.max(lo, v)); }
+    P.stroke = num('pStroke', 2, 0.5, 5);
+    P.ret = num('pReturn', 6, 2, 15);
+    P.made = num('pMade', 40, 0, 100) / 100;
+    P.balls = Math.round(num('pBalls', 10, 1, 20));
+    P.tray = Math.round(num('pTray', 5, 1, 5));
+  }
+
+  function reset(){
+    readParams();
+    allBalls.forEach(function(m){ scene.remove(m); });
+    allBalls = []; tray = []; queue = []; returning = []; bufferBall = null; gateMove = null; play = null; lastShot = '';
+    trayReserved = 0; lift = {state:'idle', t:0, ball:null}; madeN = 0; missN = 0;
+    setPlunger(FACE_DN);
+    var n = P.balls;
+    for (var i = 0; i < Math.min(n, P.tray); i++){ var m = newBall(traySlot(i)); tray.push(m); allBalls.push(m); }
+    n -= tray.length;
+    if (n > 0){ bufferBall = newBall(BUF); allBalls.push(bufferBall); n--; }
+    for (var j = 0; j < n; j++){ var q = newBall(queuePos(j)); queue.push(q); allBalls.push(q); }
+    updateUI();
+  }
+
+  function queuePos(i){
+    var s = Math.max(0, retLen - i * BD);
+    return retCurve.getPointAt(s / retLen);
+  }
+
+  // ---------- actions ----------
+  function hit(){
+    if (play || tray.length === 0) return;
+    var m = tray.shift();
+    m.material = liveMat;
+    var aim = document.getElementById('pAim').value;
+    var hi = aim === 'rand' ? Math.floor(Math.random() * HOLES.length) : parseInt(aim, 10) - 1;
+    var made = Math.random() < P.made;
+    play = {mesh:m, phase:'toSpot', t:0, from:m.position.clone(), made:made, hole:hi, curve:puttCurve(HOLES[hi], made)};
+    updateUI();
+  }
+
+  var FLIGHT = 1.4, TO_SPOT = 0.5;
+  function puttCurve(h, made){
+    var s = SPOT.clone(), dz = h.z - s.z;
+    if (made) return new THREE.CatmullRomCurve3([s, new THREE.Vector3(TB_L, TB_H + BR, s.z + dz * 0.3), new THREE.Vector3(h.x - 2, deckTop(h.x - 2) + BR, h.z - 0.05), new THREE.Vector3(h.x, deckTop(h.x) + BR, h.z)]);
+    var side = h.z > 0 ? -0.8 : 0.8;          // lip out, run on to the back gutter
+    return new THREE.CatmullRomCurve3([s, new THREE.Vector3(TB_L, TB_H + BR, s.z + dz * 0.3), new THREE.Vector3(h.x, deckTop(h.x) + BR, h.z + side),
+      new THREE.Vector3(TB_L + DECK_L - 0.3, deckTop(TB_L + DECK_L) + BR, h.z + side * 1.5)]);
+  }
+
+  var REF_LEN = HOLES.reduce(function(a, h){ return Math.max(a, h.curve.getLength()); }, 0);
+  var lastShot = '';
+  function startReturn(m, curve){ returning.push({mesh:m, curve:curve, len:curve.getLength(), s:0}); }
+
+  // ---------- update ----------
+  function ease(t){ return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+
+  function step(dt){
+    // tray balls roll toward their slots
+    tray.forEach(function(m, i){ var p = traySlot(i); m.position.lerp(p, Math.min(1, dt * 6)); });
+    // queue balls settle toward their slots
+    queue.forEach(function(m, i){ m.position.lerp(queuePos(i), Math.min(1, dt * 5)); });
+
+    // the ball being played
+    if (play){
+      play.t += dt;
+      if (play.phase === 'toSpot'){
+        var k = Math.min(1, play.t / TO_SPOT);
+        play.mesh.position.lerpVectors(play.from, SPOT, ease(k));
+        if (k >= 1){ play.phase = 'putt'; play.t = 0; }
+      } else if (play.phase === 'putt'){
+        var c = play.curve;
+        var k2 = Math.min(1, play.t / (FLIGHT + HOLES[play.hole].x * 0.03));
+        play.mesh.position.copy(c.getPointAt(1 - Math.pow(1 - k2, 1.6)));
+        if (k2 >= 1){
+          var H = HOLES[play.hole];
+          if (play.made){ madeN++; H.flash = 1.6; lastShot = 'Hole ' + (play.hole + 1) + ': in!'; }
+          else { missN++; lastShot = 'Hole ' + (play.hole + 1) + ': missed'; }
+          play.mesh.material = ballMat;
+          startReturn(play.mesh, play.made ? H.curve : missCurve);
+          play = null;
+        }
+      }
+    }
+
+    // returning balls travel the channel and stop at the back of the queue
+    var speedRet = REF_LEN / P.ret;
+    for (var r = returning.length - 1; r >= 0; r--){
+      var R = returning[r];
+      var target = R.len - queue.length * BD;
+      R.s = Math.min(target, R.s + speedRet * dt);
+      R.mesh.position.copy(R.curve.getPointAt(Math.max(0, R.s) / R.len));
+      if (R.s >= target - 1e-4){ queue.push(R.mesh); returning.splice(r, 1); }
+    }
+
+    // upper gate: advance the queue into the buffer
+    if (!gateMove && !bufferBall && queue.length && lift.state !== 'release'){
+      var q0 = queue.shift();
+      gateMove = {mesh:q0, from:q0.position.clone(), to:BUF.clone(), t:0, dur:0.35, gate:1, onDone:function(m){ bufferBall = m; }};
+    }
+    // lift controller
+    var roomInTray = tray.length + trayReserved < P.tray;
+    lift.t += dt;
+    if (lift.state === 'idle' && bufferBall && roomInTray && !gateMove){
+      var b = bufferBall; bufferBall = null; lift.ball = b; trayReserved++;
+      gateMove = {mesh:b, from:b.position.clone(), to:LOAD.clone(), t:0, dur:0.45, gate:0, onDone:function(){ lift.state = 'up'; lift.t = 0; }};
+      lift.state = 'release';
+    } else if (lift.state === 'up'){
+      var ku = Math.min(1, lift.t / P.stroke), f = FACE_DN + (FACE_UP - FACE_DN) * ease(ku);
+      setPlunger(f); lift.ball.position.set(LX, f + BR, LZ);
+      if (ku >= 1){ lift.state = 'tip'; lift.t = 0; lift.tipFrom = lift.ball.position.clone(); lift.tipSlot = tray.length + trayReserved - 1; }
+    } else if (lift.state === 'tip'){
+      var kt = Math.min(1, lift.t / 1.0);
+      var slot = traySlot(Math.min(lift.tipSlot, tray.length));
+      var pts = [lift.tipFrom, new THREE.Vector3(LX + 0.42, H0 + 0.22 + BR, LZ), new THREE.Vector3(TRAY_X0, H0 + BR, LZ), slot];
+      var tc = new THREE.CatmullRomCurve3(pts);
+      lift.ball.position.copy(tc.getPointAt(kt));
+      if (kt >= 1){ tray.push(lift.ball); trayReserved--; lift.ball = null; lift.state = 'down'; lift.t = 0; }
+    } else if (lift.state === 'down'){
+      var kd = Math.min(1, lift.t / P.stroke);
+      setPlunger(FACE_UP - (FACE_UP - FACE_DN) * ease(kd));
+      if (kd >= 1){ lift.state = 'idle'; lift.t = 0; }
+    }
+    // gate animation
+    gates[0].material.color.setHex(gateMove && gateMove.gate === 0 ? 0x4caf50 : 0xB23A26);
+    gates[1].material.color.setHex(gateMove && gateMove.gate === 1 ? 0x4caf50 : 0xB23A26);
+    if (gateMove){
+      gateMove.t += dt;
+      var kg = Math.min(1, gateMove.t / gateMove.dur);
+      gateMove.mesh.position.lerpVectors(gateMove.from, gateMove.to, ease(kg));
+      if (kg >= 1){ var gm = gateMove; gateMove = null; gm.onDone(gm.mesh); }
+    }
+    // hole sensor rings flash green when a ball drops in
+    HOLES.forEach(function(h){
+      if (h.flash > 0){ h.flash -= dt; h.ring.material.color.setHex(Math.floor(h.flash * 6) % 2 ? 0x4caf50 : 0x2E6B4C); if (h.flash <= 0) h.ring.material.color.setHex(0x111111); }
+    });
+    // carriage follows the plunger
+    carriage.position.y = plunger.position.y - 0.1;
+    var full = tray.length >= P.tray;
+    sensor.material.emissive.setHex(full ? 0xf57c00 : 0x000000);
+  }
+
+  // ---------- UI ----------
+  var statusEl = document.getElementById('statusLine'), hitBtn = document.getElementById('hitBtn');
+  var countEl = document.getElementById('count');
+  var chips = {tray:document.getElementById('chipTray'), queue:document.getElementById('chipQueue'), transit:document.getElementById('chipTransit'),
+    lift:document.getElementById('chipLift'), made:document.getElementById('chipMade'), miss:document.getElementById('chipMiss'), last:document.getElementById('chipLast')};
+  var liftNames = {idle:'idle (down)', release:'loading', up:'lifting', tip:'tipping out', down:'returning down'};
+  var lastUI = '';
+  function updateUI(){
+    var full = tray.length >= P.tray;
+    var queued = queue.length + (bufferBall ? 1 : 0);
+    var state = [tray.length, queued, returning.length, lift.state, madeN, missN, !!play, full, lastShot].join('|');
+    if (state === lastUI) return; lastUI = state;
+    chips.tray.innerHTML = 'Tray <b>' + tray.length + '/' + P.tray + (full ? ' · full' : '') + '</b>';
+    chips.tray.className = 'chip' + (full ? ' full' : '');
+    chips.queue.innerHTML = 'At the gates <b>' + queued + '</b>';
+    chips.transit.innerHTML = 'Returning <b>' + returning.length + '</b>';
+    chips.lift.innerHTML = 'Lift <b>' + liftNames[lift.state] + '</b>';
+    chips.lift.className = 'chip' + (lift.state !== 'idle' ? ' busy' : '');
+    chips.made.innerHTML = 'Holed <b>' + madeN + '</b>';
+    chips.miss.innerHTML = 'Missed <b>' + missN + '</b>';
+    chips.last.innerHTML = 'Last <b>' + (lastShot || '–') + '</b>';
+    countEl.textContent = 'Lift: ' + liftNames[lift.state] + (full ? ' · tray-full sensor ON' : '');
+    hitBtn.disabled = !!play || tray.length === 0;
+    if (play) statusEl.textContent = play.phase === 'toSpot' ? 'Raking a ball out of the tray…' : 'Ball rolling toward hole ' + (play.hole + 1) + '…';
+    else if (tray.length === 0) statusEl.textContent = 'Tray empty: waiting for balls to come back and be lifted.';
+    else if (full) statusEl.textContent = 'Tray full, lift stopped. Press Hit to take a ball and putt.';
+    else if (lift.state !== 'idle') statusEl.textContent = 'Lift refilling the tray while you play. Press Hit any time.';
+    else statusEl.textContent = 'Ball' + (tray.length > 1 ? 's' : '') + ' ready in the tray. Press Hit.';
+  }
+
+  var aimSel = document.getElementById('pAim');
+  HOLES.forEach(function(h, i){ var o = document.createElement('option'); o.value = String(i + 1); o.textContent = 'Hole ' + (i + 1); aimSel.appendChild(o); });
+  hitBtn.addEventListener('click', hit);
+  document.getElementById('applyBtn').addEventListener('click', reset);
+
+  // ---------- camera ----------
+  var views = {
+    tee:{t:new THREE.Vector3(4.2, 2.2, 1.2), d:13, th:0.95, ph:1.08},
+    lift:{t:new THREE.Vector3(3.4, 2.4, LZ), d:6.2, th:1.25, ph:1.18},
+    all:{t:new THREE.Vector3(13, 2.0, 0), d:34, th:0.72, ph:1.0},
+    funnel:{t:new THREE.Vector3(15, 1.8, 0), d:21, th:0.3, ph:1.33}
+  };
+  var cam = {t:views.all.t.clone(), d:views.all.d, th:views.all.th, ph:views.all.ph};
+  var goal = null;
+  function applyCam(){
+    camera.position.set(cam.t.x + cam.d * Math.sin(cam.ph) * Math.sin(cam.th), cam.t.y + cam.d * Math.cos(cam.ph), cam.t.z + cam.d * Math.sin(cam.ph) * Math.cos(cam.th));
+    camera.lookAt(cam.t);
+  }
+  function setView(name){
+    goal = views[name];
+    ['viewTee', 'viewLift', 'viewAll', 'viewFunnel'].forEach(function(id){ document.getElementById(id).setAttribute('aria-pressed', 'false'); });
+    document.getElementById({tee:'viewTee', lift:'viewLift', all:'viewAll', funnel:'viewFunnel'}[name]).setAttribute('aria-pressed', 'true');
+  }
+  document.getElementById('viewTee').addEventListener('click', function(){ setView('tee'); });
+  document.getElementById('viewLift').addEventListener('click', function(){ setView('lift'); });
+  document.getElementById('viewAll').addEventListener('click', function(){ setView('all'); });
+  document.getElementById('viewFunnel').addEventListener('click', function(){ setView('funnel'); });
+
+  var pointers = {}, lastPinch = 0;
+  canvas.addEventListener('pointerdown', function(e){ canvas.setPointerCapture(e.pointerId); pointers[e.pointerId] = {x:e.clientX, y:e.clientY}; goal = null; });
+  canvas.addEventListener('pointermove', function(e){
+    if (!pointers[e.pointerId]) return;
+    var ids = Object.keys(pointers);
+    if (ids.length === 1){
+      var p = pointers[e.pointerId];
+      cam.th -= (e.clientX - p.x) * 0.006;
+      cam.ph = Math.min(1.5, Math.max(0.2, cam.ph - (e.clientY - p.y) * 0.006));
+    }
+    pointers[e.pointerId] = {x:e.clientX, y:e.clientY};
+    if (ids.length === 2){
+      var a = pointers[ids[0]], b = pointers[ids[1]];
+      var dist = Math.hypot(a.x - b.x, a.y - b.y);
+      if (lastPinch) cam.d = Math.min(60, Math.max(3, cam.d * lastPinch / dist));
+      lastPinch = dist;
+    }
+  });
+  function up(e){ delete pointers[e.pointerId]; lastPinch = 0; }
+  canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
+  canvas.addEventListener('wheel', function(e){ e.preventDefault(); goal = null; cam.d = Math.min(60, Math.max(3, cam.d * (1 + e.deltaY * 0.001))); }, {passive:false});
+
+  function resize(){
+    var w = stage.clientWidth, h = stage.clientHeight;
+    renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var last = performance.now();
+  function frame(now){
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (goal){
+      var k = reduce ? 1 : Math.min(1, dt * 4);
+      cam.t.lerp(goal.t, k); cam.d += (goal.d - cam.d) * k; cam.th += (goal.th - cam.th) * k; cam.ph += (goal.ph - cam.ph) * k;
+      if (Math.abs(goal.d - cam.d) < 0.01) goal = null;
+    }
+    step(dt);
+    updateUI();
+    applyCam();
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  resize(); reset(); applyCam();
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>

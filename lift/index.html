@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Puttman Lift Mechanism</title>
+<style>
+  .pnav{max-width:1240px;margin:0 auto 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px}
+  .pnav .home{color:var(--ink,#1A241D);text-decoration:none;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+  .pnav .tabs{display:flex;gap:6px;flex-wrap:wrap;background:var(--surface-2,#EFEBDD);border:1px solid var(--line,#DDD6C2);border-radius:999px;padding:4px}
+  .pnav .tabs a{color:var(--ink-muted,#5E6B60);text-decoration:none;padding:7px 14px;border-radius:999px;white-space:nowrap}
+  .pnav .tabs a:hover{color:var(--ink,#1A241D)}
+  .pnav .tabs a[aria-current="page"]{background:var(--structure,#2E6B4C);color:#fff}
+  .pnav a:focus-visible{outline:2px solid var(--accent,#B5602A);outline-offset:2px}
+</style>
+</head><body>
+<nav class="pnav" aria-label="Pages"><a class="home" href="../">Puttman · ball lift</a><span class="tabs"><a href="../teebox/">The whole course</a><a href="../lift/" aria-current="page">Inside the lift</a></span></nav>
+<style>
+  :root{
+    --bg:#F6F4EC; --surface:#FFFFFF; --surface-2:#EFEBDD;
+    --ink:#1A241D; --ink-muted:#5E6B60; --line:#DDD6C2;
+    --accent:#B5602A; --accent-soft:#F1E1D0;
+    --structure:#2E6B4C; --structure-soft:#DCEAE0;
+    --flag:#B23A26; --flag-soft:#F5DDD6;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme:dark;
+      --bg:#10150F; --surface:#171D16; --surface-2:#1E2620;
+      --ink:#ECEFE8; --ink-muted:#9FAC9F; --line:#2B342C;
+      --accent:#E28A4C; --accent-soft:#3A2A1C;
+      --structure:#58A87C; --structure-soft:#1E3327;
+      --flag:#E2624A; --flag-soft:#3B211B;
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#10150F; --surface:#171D16; --surface-2:#1E2620;
+    --ink:#ECEFE8; --ink-muted:#9FAC9F; --line:#2B342C;
+    --accent:#E28A4C; --accent-soft:#3A2A1C;
+    --structure:#58A87C; --structure-soft:#1E3327;
+    --flag:#E2624A; --flag-soft:#3B211B;
+  }
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--ink); margin:0;
+    font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    padding-inline:clamp(16px,4vw,48px); padding-block:clamp(20px,4vw,40px);
+  }
+  .wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--structure);display:flex;align-items:center;gap:10px}
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--structure)}
+  h1{font-family:"Big Shoulders Display","Arial Narrow",sans-serif;font-weight:800;font-size:clamp(28px,4vw,42px);line-height:1;margin:6px 0 0;text-wrap:balance}
+  h2{font-family:"Big Shoulders Display","Arial Narrow",sans-serif;font-weight:800;font-size:24px;line-height:1.1;margin:0;text-wrap:balance}
+  .sub{color:var(--ink-muted);font-size:clamp(14px,1.5vw,16px);line-height:1.55;max-width:72ch;margin:8px 0 0}
+
+  .viewer{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px}
+  @media (max-width:900px){.viewer{grid-template-columns:1fr}}
+  .stage{position:relative;background:#E6E3DA;border:1px solid var(--line);border-radius:12px;overflow:hidden;height:min(70vh,660px);min-height:380px}
+  .stage canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
+  .stage canvas:active{cursor:grabbing}
+  .pins{position:absolute;inset:0;pointer-events:none}
+  .pin{
+    position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer;
+    width:22px;height:22px;border-radius:50%;border:1.5px solid #fff;background:#1A241D;color:#fff;
+    font:600 11px/19px "IBM Plex Mono",monospace;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.35);
+  }
+  .pin.on{background:#B5602A}
+  .pin[hidden]{display:none}
+  .tag{
+    position:absolute;transform:translate(14px,-50%);pointer-events:none;white-space:nowrap;
+    background:rgba(255,255,255,.94);border:1px solid #DDD6C2;border-radius:6px;padding:4px 8px;
+    font:500 11.5px "IBM Plex Mono",monospace;color:#1A241D;
+  }
+  .ctrl{position:absolute;left:12px;right:12px;bottom:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .ctrl button,.views button{
+    font:500 11.5px "IBM Plex Mono",monospace;color:#2b2f2c;cursor:pointer;
+    background:rgba(255,255,255,.92);border:1px solid #DDD6C2;border-radius:999px;padding:7px 12px;
+  }
+  .ctrl button[aria-pressed="true"],.views button[aria-pressed="true"]{background:#2E6B4C;color:#fff;border-color:#2E6B4C}
+  .ctrl label{display:flex;align-items:center;gap:8px;font:500 11.5px "IBM Plex Mono",monospace;color:#2b2f2c;background:rgba(255,255,255,.92);border:1px solid #DDD6C2;border-radius:999px;padding:5px 12px}
+  .ctrl input[type=range]{width:120px;accent-color:#B5602A}
+  .phase{margin-left:auto;font:500 11.5px "IBM Plex Mono",monospace;color:#fff;background:#1A241D;border-radius:999px;padding:7px 12px}
+  .views{position:absolute;top:12px;right:12px;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  button:focus-visible,.pin:focus-visible,li button:focus-visible{outline:2px solid #B5602A;outline-offset:2px}
+
+  .parts{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px;max-height:min(70vh,660px);overflow:auto}
+  .parts h3{margin:0 0 2px;font:600 12px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-muted)}
+  .parts ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+  .parts li button{
+    width:100%;text-align:left;display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:start;
+    background:none;border:1px solid transparent;border-radius:8px;padding:6px;cursor:pointer;color:var(--ink);font:inherit;
+  }
+  .parts li button:hover{background:var(--surface-2)}
+  .parts li button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent)}
+  .parts .n{font:600 11px/22px "IBM Plex Mono",monospace;width:22px;height:22px;border-radius:50%;background:var(--ink);color:var(--bg);text-align:center}
+  .parts .nm{font-size:13.5px;font-weight:600;line-height:1.3}
+  .parts .sp{display:block;font-size:12px;color:var(--ink-muted);font-weight:400;line-height:1.4;margin-top:2px}
+
+  .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  @media (max-width:860px){.steps{grid-template-columns:1fr 1fr}}
+  @media (max-width:480px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+  .step .k{font:600 11px "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+  .step p{margin:0;font-size:14px;line-height:1.5}
+  .step .t{font:500 11.5px "IBM Plex Mono",monospace;color:var(--ink-muted)}
+
+  .callout{background:var(--structure-soft);border:1px solid var(--structure);border-radius:12px;padding:16px 18px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px}
+  @media (max-width:760px){.callout{grid-template-columns:1fr}}
+  .callout p{margin:6px 0 0;font-size:14.5px;line-height:1.55;max-width:62ch}
+  .bars{display:flex;flex-direction:column;gap:10px;font:500 12px "IBM Plex Mono",monospace;color:var(--ink)}
+  .bar{display:flex;flex-direction:column;gap:4px}
+  .track{position:relative;height:16px;background:var(--surface);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .fill{position:absolute;inset:0 auto 0 0;border-radius:3px}
+  .limit{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink)}
+
+  .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+  table{border-collapse:collapse;width:100%;min-width:760px;font-size:13.5px}
+  th{text-align:left;font:600 11px "IBM Plex Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-muted);background:var(--surface-2);padding:10px 12px;border-bottom:1px solid var(--line)}
+  td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+  tr:last-child td{border-bottom:none}
+  td.num{font:600 12px "IBM Plex Mono",monospace;color:var(--accent);width:38px}
+  td.ex{font:500 12.5px "IBM Plex Mono",monospace;color:var(--ink-muted)}
+  .note{font-size:12.5px;color:var(--ink-muted);line-height:1.55;max-width:95ch;margin:0}
+  @media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Ball return · vertical pop-up lift · to scale</div>
+    <h1>Inside the lift: every part, and how it moves</h1>
+    <p class="sub">A to-scale 3D model of the lift that sits under the tee box: clear tube, plunger, linear rail, toothed belt, NEMA17 motor, the two gate solenoids and the sensors. Press play to watch one ball go from the funnel to the tray, or pull the exploded-view slider to separate the parts.</p>
+  </header>
+
+  <section class="viewer" aria-label="3D model">
+    <div class="stage" id="stage">
+      <canvas id="c" aria-label="3D model of the lift mechanism"></canvas>
+      <div class="pins" id="pins"></div>
+      <div class="views" role="group" aria-label="Camera view">
+        <button type="button" data-view="iso" aria-pressed="true">3/4 view</button>
+        <button type="button" data-view="drive" aria-pressed="false">Drive side</button>
+        <button type="button" data-view="top" aria-pressed="false">Hood &amp; tray</button>
+      </div>
+      <div class="ctrl">
+        <button type="button" id="playBtn" aria-pressed="true">Pause cycle</button>
+        <label for="explode">Exploded view <input type="range" id="explode" min="0" max="100" value="0"></label>
+        <button type="button" id="pinsBtn" aria-pressed="true">Numbers on</button>
+        <span class="phase" id="phase">Waiting</span>
+      </div>
+    </div>
+    <aside class="parts">
+      <h3>Parts · click to highlight</h3>
+      <ol id="partList"></ol>
+    </aside>
+  </section>
+
+  <section class="steps" aria-label="How one cycle works">
+    <div class="step"><span class="k">1 · Load</span><p>Plunger waits at the bottom. The lower gate solenoid pulls its pin for 0.15 s and one ball rolls from the funnel channel through the side window onto the plunger face.</p><span class="t">Beam sensor confirms: exactly one ball</span></div>
+    <div class="step"><span class="k">2 · Lift</span><p>The motor turns the lower pulley; the belt pulls the carriage up the rail, and the arm through the tube slot carries the plunger 232 mm up.</p><span class="t">≈2 s · ~0.1 N·m · 260 rpm peak</span></div>
+    <div class="step"><span class="k">3 · Tip out</span><p>The face is tilted 10° toward the exit. As its low edge clears the wedge lip the tube wall is gone, and gravity rolls the ball out. The roof rises toward the exit, so if the ball jumps it is pushed out too.</p><span class="t">≈0.2 s to the lip · 0.26 m/s</span></div>
+    <div class="step"><span class="k">4 · Roll &amp; reset</span><p>The ball drops 22 mm down the wedge (≈0.56 m/s) and rolls to the back of the tray. The plunger goes back down; the upper gate lets the next ball into the gap between the gates.</p><span class="t">One ball ≈ every 5 s until the tray is full</span></div>
+  </section>
+
+  <section class="callout" aria-label="Drive change">
+    <div>
+      <h2>Drive change: toothed belt instead of lead screw</h2>
+      <p>With the hood, the plunger has to travel 232 mm, and everything must fit under the plywood (about 272 mm clear). A lead screw needs its nut travel plus a bearing block at each end plus a pulley: about 287 mm, which does not fit. A GT2 belt runs on pulleys beside the rail, so only the rail length counts: 232 mm travel + 29 mm carriage = 261 mm. It fits, runs slower (≈260 rpm), and is simpler to service. This replaces the lead screw in the Issue 2 spec.</p>
+    </div>
+    <div class="bars" aria-label="Height needed vs available">
+      <div class="bar"><span>Lead screw: 287 mm needed</span><div class="track"><div class="fill" style="width:100%;background:var(--flag)"></div><div class="limit" style="left:94.8%"></div></div></div>
+      <div class="bar"><span>GT2 belt: 261 mm needed</span><div class="track"><div class="fill" style="width:90.9%;background:var(--structure)"></div><div class="limit" style="left:94.8%"></div></div></div>
+      <span style="color:var(--ink-muted)">Black line = 272 mm available under the plywood</span>
+    </div>
+  </section>
+
+  <section aria-label="Parts list" style="display:flex;flex-direction:column;gap:10px">
+    <h2>Parts list</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>#</th><th>Part</th><th>Specification</th><th>Typical part</th><th>What it does</th></tr></thead>
+        <tbody id="bom"></tbody>
+      </table>
+    </div>
+    <p class="note">Model and numbers follow the Issue 2/3 concept: plunger loads at 95 mm, top of stroke 327 mm, tee surface 300 mm (client CAD), plywood 18 mm assumed. "Typical part" names are common off-the-shelf types for sizing and quoting, not a final selection. The funnel channel is shown as the straight end section the client's funnel must finish with.</p>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  // ---------------- parts data (shared by pins, list and table) ----------------
+  var PARTS = [
+    {id:'tube',   name:'Lift tube',            spec:'Clear PC Ø56 × 3 mm, 272 mm long, 10 mm drive slot + 50 × 55 mm side window', ex:'Polycarbonate tube Ø56/50', role:'Guides the ball and plunger; you can see the ball rise.'},
+    {id:'plunger',name:'Plunger',              spec:'Ø49 × 80 mm, top face tilted 10° toward the exit, 2 PTFE wear bands', ex:'POM-C or PA12-CF', role:'Carries the ball; the tilt rolls it out at the top.'},
+    {id:'arm',    name:'Drive arm',            spec:'5 mm aluminium bracket through the tube slot', ex:'EN AW-6082 T6', role:'Links plunger to carriage; stops the plunger turning.'},
+    {id:'rail',   name:'Linear rail + carriage',spec:'Rail 268 mm, short carriage 29 mm', ex:'MGN9 rail + MGN9C block', role:'Keeps the lift straight and smooth.'},
+    {id:'belt',   name:'Toothed belt + pulleys',spec:'6 mm belt, 20-tooth motor pulley (bottom) and idler (top), 238 mm centres', ex:'GT2 6 mm, GT2-20T', role:'Turns motor rotation into up/down travel (40 mm per turn).'},
+    {id:'motor',  name:'Stepper motor',        spec:'42 × 42 × 40 mm, ~0.4 N·m holding, 24 V', ex:'NEMA17 + TMC2209 driver', role:'Drives the lift; current-limited to ≤ 50 N push, stall detection.'},
+    {id:'plate',  name:'Mounting plate + base',spec:'5 mm plate 270 × 120 mm on a 6 mm base 220 × 200 mm, rubber feet', ex:'EN AW-6082 / 5754', role:'Holds tube, rail and motor in line; fixes to the frame.'},
+    {id:'gates',  name:'Gate solenoids (×2)',  spec:'24 V push-pull, ~10 mm stroke, spring return, 50 mm apart', ex:'JF-0530B class', role:'Let exactly one ball at a time onto the plunger.'},
+    {id:'channel',name:'Funnel end channel',   spec:'50 mm U-channel, ≥110 mm straight, ≥10° fall, enters on the high side of the face', ex:'Client funnel / ply or PETG', role:'Queues balls from all holes to the lift.'},
+    {id:'sensors',name:'Sensors',              spec:'Home switch at the bottom of the rail, IR beam across the tube at load height', ex:'Slotted opto + IR pair', role:'Home position; confirms one ball is loaded.'},
+    {id:'hood',   name:'Hood',                 spec:'1.5 mm sheet, 75 mm high at the back rising to 95 mm at the opening', ex:'Stainless or powder-coated Al', role:'Covers the hole; roof deflects the ball outward.'},
+    {id:'wedge',  name:'Exit wedge + tray',    spec:'Wedge 100 mm, 22 mm drop; tray 225 mm for 5 balls with 15 mm stop', ex:'POM or hardwood; Al rails', role:'Gives the ball its roll and keeps balls ready to putt.'},
+    {id:'full',   name:'Tray-full sensor',     spec:'Reflective IR at the tray entry', ex:'IR reflective module', role:'Stops the lift when 5 balls are waiting.'}
+  ];
+
+  // ---------------- three.js setup (units: mm) ----------------
+  var canvas = document.getElementById('c'), stage = document.getElementById('stage');
+  var renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+  var scene = new THREE.Scene(); scene.background = new THREE.Color(0xE6E3DA);
+  var camera = new THREE.PerspectiveCamera(34, 1, 2, 6000);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0xb8b2a4, 0.75));
+  var key = new THREE.DirectionalLight(0xffffff, 1.15); key.position.set(420, 700, 520); key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048); var sc = key.shadow.camera; sc.left = -450; sc.right = 450; sc.top = 500; sc.bottom = -300; sc.far = 2000; key.shadow.bias = -0.0005;
+  scene.add(key);
+  var rim = new THREE.DirectionalLight(0xffffff, 0.45); rim.position.set(-500, 300, -400); scene.add(rim);
+
+  var M = {
+    alu:   new THREE.MeshStandardMaterial({color:0xC9CED3, metalness:0.85, roughness:0.32}),
+    aluDk: new THREE.MeshStandardMaterial({color:0xA7AEB5, metalness:0.85, roughness:0.4}),
+    steel: new THREE.MeshStandardMaterial({color:0x9AA3AB, metalness:0.95, roughness:0.22}),
+    black: new THREE.MeshStandardMaterial({color:0x1E2124, metalness:0.3, roughness:0.55}),
+    rubber:new THREE.MeshStandardMaterial({color:0x151515, metalness:0, roughness:0.9}),
+    pom:   new THREE.MeshStandardMaterial({color:0x24282C, metalness:0.05, roughness:0.4}),
+    pc:    new THREE.MeshPhysicalMaterial({color:0xE8F3F7, metalness:0, roughness:0.05, transparent:true, opacity:0.28, clearcoat:1, side:THREE.DoubleSide, depthWrite:false}),
+    ply:   new THREE.MeshStandardMaterial({color:0xD9BE93, roughness:0.85, transparent:true, opacity:0.55, depthWrite:false}),
+    turf:  new THREE.MeshStandardMaterial({color:0x3F8A58, roughness:0.95, transparent:true, opacity:0.6, depthWrite:false}),
+    wood:  new THREE.MeshStandardMaterial({color:0xC8A474, roughness:0.8}),
+    wedge: new THREE.MeshStandardMaterial({color:0x6D5A4B, roughness:0.55}),
+    red:   new THREE.MeshStandardMaterial({color:0xB23A26, roughness:0.5}),
+    copper:new THREE.MeshStandardMaterial({color:0xB87333, metalness:0.9, roughness:0.35}),
+    pcb:   new THREE.MeshStandardMaterial({color:0x1F5C3A, roughness:0.6}),
+    ball:  new THREE.MeshStandardMaterial({color:0xFFFFFF, roughness:0.32}),
+    ballLive:new THREE.MeshStandardMaterial({color:0xFFF3A6, roughness:0.32}),
+    slab:  new THREE.MeshStandardMaterial({color:0xBDB8AC, roughness:0.95})
+  };
+  var partMats = {};   // id -> list of materials to highlight
+
+  // groups per part (for explode + highlight)
+  var G = {}; PARTS.forEach(function(p){ G[p.id] = new THREE.Group(); G[p.id].userData.base = new THREE.Vector3(); scene.add(G[p.id]); });
+  function add(id, geo, mat, x, y, z, rot){
+    var m = new THREE.Mesh(geo, mat.clone ? mat.clone() : mat);
+    m.position.set(x, y, z); if (rot) m.rotation.set(rot[0], rot[1], rot[2]);
+    m.castShadow = !mat.transparent; m.receiveShadow = true;
+    (id ? G[id] : scene).add(m);
+    if (id){ (partMats[id] = partMats[id] || []).push(m.material); }
+    return m;
+  }
+  var BX = function(w, h, d){ return new THREE.BoxGeometry(w, h, d); };
+  var CY = function(r1, r2, h, s){ return new THREE.CylinderGeometry(r1, r2, h, s || 32); };
+
+  // slab
+  var slab = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400), M.slab); slab.rotation.x = -Math.PI / 2; slab.receiveShadow = true; scene.add(slab);
+
+  // ---------------- geometry (x = exit direction, z- = drive side, y up, slab y = 0) ----------------
+  var FACE_DN = 95, FACE_UP = 327, TILT = 10 * Math.PI / 180, BR = 21.35, PLY_B = 282, SURF = 300;
+
+  // base + mounting plate
+  add('plate', BX(220, 6, 200), M.alu, 20, 7, -25);
+  [[-80,-115],[120,-115],[-80,65],[120,65]].forEach(function(p){ add('plate', CY(9, 9, 4, 20), M.rubber, p[0], 2, p[1]); });
+  add('plate', BX(120, 272, 5), M.alu, 15, 146, -62.5);
+  add('plate', BX(120, 5, 40), M.aluDk, 15, 12.5, -42);          // plate foot
+
+  // tube: partial cylinders leaving a 10 mm slot at -z and a window on -x (y 95..152)
+  function arcTube(y0, y1, gaps){ // gaps: [[centreTheta, halfWidth],...], theta 0 at +z, pi/2 at +x
+    var segs = []; var t = 0; var cuts = gaps.map(function(g){ return [g[0] - g[1], g[0] + g[1]]; }).sort(function(a, b){ return a[0] - b[0]; });
+    var start = cuts.length ? cuts[cuts.length - 1][1] - 2 * Math.PI : 0;
+    cuts.forEach(function(c){ segs.push([start, c[0] - start]); start = c[1]; });
+    if (!cuts.length) segs.push([0, Math.PI * 2]);
+    segs.forEach(function(s){
+      if (s[1] <= 0.01) return;
+      [28, 25].forEach(function(r, i){
+        var geo = new THREE.CylinderGeometry(r, r, y1 - y0, 40, 1, true, s[0], s[1]);
+        var m = add('tube', geo, M.pc, 0, (y0 + y1) / 2, 0);
+        m.castShadow = false;
+      });
+    });
+  }
+  var SLOT = [Math.PI, 5 / 28], WIN = [3 * Math.PI / 2, 25 / 28];
+  arcTube(10, 95, [SLOT]); arcTube(95, 152, [SLOT, WIN]); arcTube(152, PLY_B, [SLOT]);
+  // tube clamps
+  [60, 230].forEach(function(y){
+    add('tube', new THREE.TorusGeometry(29.5, 2.2, 10, 40, Math.PI * 1.6), M.alu, 0, y, 0, [Math.PI / 2, 0, Math.PI * 0.7]);
+    add('tube', BX(8, 12, 32), M.alu, 0, y, -44);
+  });
+
+  // plywood + turf with hole, see-through
+  var plyShape = new THREE.Shape(); plyShape.moveTo(-230, -180); plyShape.lineTo(420, -180); plyShape.lineTo(420, 180); plyShape.lineTo(-230, 180); plyShape.lineTo(-230, -180);
+  var hole = new THREE.Path(); hole.absarc(0, 0, 25, 0, Math.PI * 2, true); plyShape.holes.push(hole);
+  var plyGeo = new THREE.ExtrudeGeometry(plyShape, {depth:18, bevelEnabled:false});
+  var ply = new THREE.Mesh(plyGeo, M.ply); ply.rotation.x = -Math.PI / 2; ply.position.set(0, PLY_B, 0); ply.renderOrder = 2; scene.add(ply);
+  var turfGeo = new THREE.ShapeGeometry(plyShape);
+  var turf = new THREE.Mesh(turfGeo, M.turf); turf.rotation.x = -Math.PI / 2; turf.position.set(0, SURF + 0.6, 0); turf.renderOrder = 3; scene.add(turf);
+  var plyGroup = [ply, turf];
+
+  // plunger with tilted top (face centre height F): build once, move group
+  var plGeo = new THREE.CylinderGeometry(24.5, 24.5, 80, 48, 4);
+  var pos = plGeo.attributes.position;
+  for (var i = 0; i < pos.count; i++){ if (pos.getY(i) > 39) pos.setY(i, 40 - pos.getX(i) * Math.tan(TILT)); }
+  plGeo.computeVertexNormals();
+  var plunger = new THREE.Group(); G.plunger.add(plunger);
+  var plMesh = new THREE.Mesh(plGeo, M.pom.clone()); plMesh.castShadow = true; plunger.add(plMesh); partMats.plunger = [plMesh.material];
+  [-26, 22].forEach(function(y){ var b = new THREE.Mesh(CY(24.8, 24.8, 5, 48), new THREE.MeshStandardMaterial({color:0xE9E4D6, roughness:0.4})); b.position.y = y; plunger.add(b); partMats.plunger.push(b.material); });
+  // arm (moves with plunger) - attached 18 mm above plunger bottom
+  var armG = new THREE.Group(); G.arm.add(armG);
+  var arm1 = new THREE.Mesh(BX(10, 12, 32), M.alu.clone()); arm1.position.set(0, 0, -34); armG.add(arm1);
+  var arm2 = new THREE.Mesh(BX(34, 12, 6), M.alu.clone()); arm2.position.set(8, 0, -49); armG.add(arm2);
+  partMats.arm = [arm1.material, arm2.material]; arm1.castShadow = arm2.castShadow = true;
+
+  // rail + carriage (carriage moves)
+  add('rail', BX(9, 268, 6.5), M.steel, 0, 146, -56.75);
+  for (var yb = 22; yb < 280; yb += 20){ add('rail', CY(2.2, 2.2, 1, 12), M.black, 0, yb, -53.4, [Math.PI / 2, 0, 0]); }
+  var carG = new THREE.Group(); G.rail.add(carG);
+  var car = new THREE.Mesh(BX(20, 29, 10), M.steel.clone()); car.position.set(0, 0, -48.5); carG.add(car);
+  var carEnd = new THREE.Mesh(BX(20, 3, 10), M.red.clone()); carEnd.position.set(0, 16, -48.5); carG.add(carEnd);
+  var carEnd2 = carEnd.clone(); carEnd2.position.y = -16; carG.add(carEnd2);
+  partMats.rail.push(car.material, carEnd.material);
+  car.castShadow = true;
+
+  // belt drive: pulleys at x = 26 on axis z, belt in plane z = -48
+  var PX = 26, P_LO = 30, P_HI = 268, PR = 6.37;
+  var pulleyLo = new THREE.Group(); pulleyLo.position.set(PX, P_LO, -47); G.belt.add(pulleyLo);
+  var pulleyHi = new THREE.Group(); pulleyHi.position.set(PX, P_HI, -47); G.belt.add(pulleyHi);
+  [pulleyLo, pulleyHi].forEach(function(pg, k){
+    var core = new THREE.Mesh(CY(PR, PR, 7, 20), M.alu.clone()); core.rotation.x = Math.PI / 2; pg.add(core);
+    var fl1 = new THREE.Mesh(CY(8.5, 8.5, 1.2, 24), M.alu.clone()); fl1.rotation.x = Math.PI / 2; fl1.position.z = 4; pg.add(fl1);
+    var fl2 = fl1.clone(); fl2.position.z = -4; pg.add(fl2);
+    var set = new THREE.Mesh(BX(2, 4, 3), M.black); set.position.set(0, 7.5, 0); pg.add(set);  // set-screw marker shows rotation
+    partMats.belt = (partMats.belt || []).concat([core.material]);
+  });
+  // idler bracket
+  add('belt', BX(24, 20, 14), M.aluDk, PX, P_HI, -57);
+  // belt (two straight runs + wraps)
+  var beltMat = M.rubber.clone(); partMats.belt.push(beltMat);
+  function beltRun(x){ var m = new THREE.Mesh(BX(1.4, P_HI - P_LO, 6), beltMat); m.position.set(x, (P_LO + P_HI) / 2, -47); m.castShadow = true; G.belt.add(m); }
+  beltRun(PX - PR - 0.7); beltRun(PX + PR + 0.7);
+  [P_LO, P_HI].forEach(function(y, k){
+    var t = new THREE.Mesh(new THREE.TorusGeometry(PR + 0.7, 0.8, 6, 20, Math.PI), beltMat);
+    t.scale.z = 3.5; t.position.set(PX, y, -47); t.rotation.z = k ? 0 : Math.PI; G.belt.add(t);
+  });
+  // belt clamp on carriage (left run), moves with carriage
+  var clamp = new THREE.Mesh(BX(14, 16, 10), M.aluDk.clone()); clamp.position.set(PX - PR - 3, 0, -47); carG.add(clamp);
+  var clampLink = new THREE.Mesh(BX(12, 6, 4), M.aluDk.clone()); clampLink.position.set(11, 0, -47); carG.add(clampLink);
+
+  // motor behind the plate, shaft through to lower pulley
+  var motorG = new THREE.Group(); motorG.position.set(PX, P_LO, -86); G.motor.add(motorG);
+  var mBody = new THREE.Mesh(BX(42, 42, 26), M.black.clone()); motorG.add(mBody);
+  var mCap1 = new THREE.Mesh(BX(42, 42, 7), M.alu.clone()); mCap1.position.z = 16.5; motorG.add(mCap1);
+  var mCap2 = mCap1.clone(); mCap2.position.z = -16.5; motorG.add(mCap2);
+  var shaft = new THREE.Mesh(CY(2.5, 2.5, 26, 12), M.steel.clone()); shaft.rotation.x = Math.PI / 2; shaft.position.z = 32; motorG.add(shaft);
+  var conn = new THREE.Mesh(BX(16, 8, 10), new THREE.MeshStandardMaterial({color:0xF2F2F2, roughness:0.5})); conn.position.set(0, -25, -8); motorG.add(conn);
+  partMats.motor = [mBody.material, mCap1.material, shaft.material];
+  [mBody, mCap1, mCap2].forEach(function(m){ m.castShadow = true; });
+  // driver board near the motor
+  add('motor', BX(22, 3, 16), M.pcb, 70, 14, -95);
+  add('motor', BX(8, 5, 8), M.black, 70, 18, -95);
+
+  // funnel end channel (-x side), floor rising 10° away from the tube
+  var chanLen = 170, CH0 = -26, chanFloor = function(x){ return FACE_DN + (CH0 - x) * Math.tan(10 * Math.PI / 180); };
+  var chG = new THREE.Group(); G.channel.add(chG);
+  var chMid = CH0 - chanLen / 2, chAng = 10 * Math.PI / 180;
+  var chFloor = new THREE.Mesh(BX(chanLen, 3, 52), M.wood.clone()); chFloor.position.set(chMid, chanFloor(chMid) - 1.5, 0); chFloor.rotation.z = -chAng; chG.add(chFloor);
+  [-27.5, 27.5].forEach(function(z){ var w = new THREE.Mesh(BX(chanLen, 30, 3), M.wood.clone()); w.position.set(chMid, chanFloor(chMid) + 13, z); w.rotation.z = -chAng; chG.add(w); partMats.channel = (partMats.channel || []).concat([w.material]); });
+  partMats.channel.push(chFloor.material);
+  chG.children.forEach(function(m){ m.castShadow = true; m.receiveShadow = true; });
+  // funnel boards leading in
+  var fb = new THREE.Mesh(BX(120, 3, 160), M.wood.clone()); fb.position.set(CH0 - chanLen - 50, chanFloor(CH0 - chanLen - 50) + 8, 0); fb.rotation.set(0.35, 0, -chAng); chG.add(fb);
+
+  // gates: solenoid bodies above the channel, pins down into it
+  var GATE_X = [-50, -100];
+  var gatePins = [];
+  GATE_X.forEach(function(x){
+    var y = chanFloor(x);
+    add('gates', BX(22, 3, 70), M.aluDk, x, y + 50, 0);                // bridge
+    add('gates', BX(18, 26, 14), M.steel, x, y + 66, 0);               // solenoid frame
+    add('gates', CY(6, 6, 14, 16), M.copper, x, y + 66, 0, [Math.PI / 2, 0, 0]); // coil
+    var pin = add('gates', CY(3, 3, 44, 12), M.steel, x, y + 30, 0);
+    gatePins.push({m:pin, y:y});
+    add('gates', new THREE.TorusGeometry(4, 0.8, 6, 12), M.steel, x, y + 58, 0, [Math.PI / 2, 0, 0]); // spring hint
+  });
+
+  // sensors: IR pair across tube at load height, home switch at rail bottom
+  add('sensors', BX(10, 10, 12), M.black, 18, FACE_DN + BR, 36);
+  add('sensors', BX(10, 10, 12), M.black, 18, FACE_DN + BR, -36);
+  add('sensors', BX(14, 18, 12), M.black, -18, 26, -52);
+  add('sensors', BX(4, 18, 6), M.black, -21, 26, -52);
+
+  // hood (on the surface): back wall 75, roof rising to 95 at the opening (+x)
+  var hoodMat = new THREE.MeshStandardMaterial({color:0xB9C2C8, metalness:0.7, roughness:0.35, transparent:true, opacity:0.55, side:THREE.DoubleSide, depthWrite:false});
+  add('hood', BX(1.5, 75, 90), hoodMat, -45, SURF + 37.5, 0);
+  var sideShape = new THREE.Shape(); sideShape.moveTo(-45, 0); sideShape.lineTo(45, 0); sideShape.lineTo(45, 95); sideShape.lineTo(-45, 75); sideShape.lineTo(-45, 0);
+  [-45, 45].forEach(function(z){ var s = add('hood', new THREE.ShapeGeometry(sideShape), hoodMat, 0, SURF, z); });
+  var roof = add('hood', BX(94, 1.5, 93), hoodMat, 0, SURF + 85, 0, [0, 0, Math.atan(20 / 90)]);
+  add('hood', BX(96, 3, 96), M.aluDk, 0, SURF + 1.5, 0).visible = false;
+
+  // wedge + tray
+  var wShape = new THREE.Shape(); wShape.moveTo(0, 0); wShape.lineTo(0, 22); wShape.lineTo(100, 0); wShape.lineTo(0, 0);
+  add('wedge', new THREE.ExtrudeGeometry(wShape, {depth:60, bevelEnabled:false}), M.wedge, 30, SURF, -30);
+  add('wedge', BX(225, 10, 3), M.alu, 242.5, SURF + 5, -28);
+  add('wedge', BX(225, 10, 3), M.alu, 242.5, SURF + 5, 28);
+  add('wedge', BX(6, 15, 60), M.alu, 358, SURF + 7.5, 0);
+  add('full', BX(10, 10, 8), M.black, 140, SURF + 45, 36);
+  add('full', CY(2.5, 2.5, 3, 12), new THREE.MeshStandardMaterial({color:0xff9800, emissive:0x000000}), 140, SURF + 45, 31, [Math.PI / 2, 0, 0]);
+
+  // ---------------- balls ----------------
+  var ballGeo = new THREE.SphereGeometry(BR, 28, 20);
+  function ball(){ var b = new THREE.Mesh(ballGeo, M.ball); b.castShadow = true; scene.add(b); return b; }
+  var liftBall = ball(), nextBall = ball(), queueBalls = [ball(), ball()];
+  var trayBalls = []; for (var t5 = 0; t5 < 5; t5++){ var tb = ball(); tb.visible = false; trayBalls.push(tb); }
+  function chanPos(x){ return new THREE.Vector3(x, chanFloor(x) + BR + 1, 0); }
+  var BUF = -75, LOAD = new THREE.Vector3(0, FACE_DN + BR, 0);
+  function traySlot(i){ return new THREE.Vector3(355 - BR - i * 2 * BR, SURF + BR, 0); }
+
+  // ---------------- cycle animation ----------------
+  var PH = [ // name, duration
+    ['Waiting', 0.7], ['Lower gate opens: ball rolls onto the plunger', 0.7], ['Belt lifts the plunger 232 mm', 2.0],
+    ['Face clears the lip: ball rolls out', 0.9], ['Ball joins the tray', 0.3], ['Plunger returns down', 2.0], ['Upper gate lets the next ball in', 0.6]
+  ];
+  var cyc = {i:0, t:0, n:0}, playing = true;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function ease(t){ return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+  var face = FACE_DN, pulleyAngle = 0;
+
+  function setFace(f){
+    var d = f - face; face = f;
+    plunger.position.set(0, f - 40, 0);
+    armG.position.set(0, f - 62, 0);
+    carG.position.set(0, f - 62, 0);
+    pulleyAngle += d / PR;
+    pulleyLo.rotation.z = pulleyAngle; pulleyHi.rotation.z = pulleyAngle;
+  }
+  function onFace(xOff){ var x = xOff || 0; return new THREE.Vector3(x, face - x * Math.tan(TILT) + BR / Math.cos(TILT), 0); }
+
+  function layout(){
+    var name = PH[cyc.i][0], k = Math.min(1, cyc.t / PH[cyc.i][1]), e = ease(k);
+    var filled = cyc.n % 6;           // tray fill level, resets after full
+    trayBalls.forEach(function(b, i){ b.visible = i < filled; b.position.copy(traySlot(i)); });
+    gatePins[0].m.position.y = gatePins[0].y + 30 + (cyc.i === 1 && k < 0.5 ? 24 : 0);
+    gatePins[1].m.position.y = gatePins[1].y + 30 + (cyc.i === 6 && k < 0.6 ? 24 : 0);
+    queueBalls[0].position.copy(chanPos(-100 - 2 * BR - 4));
+    queueBalls[1].position.copy(chanPos(-100 - 4 * BR - 6));
+    liftBall.material = M.ballLive;
+    nextBall.visible = true;
+    switch (cyc.i){
+      case 0: setFace(FACE_DN); liftBall.position.copy(chanPos(BUF)); nextBall.visible = false; break;
+      case 1: setFace(FACE_DN); nextBall.visible = false;
+        liftBall.position.lerpVectors(chanPos(BUF), onFace(-4), e); break;
+      case 2: setFace(FACE_DN + (FACE_UP - FACE_DN) * e); liftBall.position.copy(onFace(-4)); nextBall.visible = false; break;
+      case 3: setFace(FACE_UP); nextBall.visible = false;
+        var c = new THREE.CatmullRomCurve3([onFace(-4), new THREE.Vector3(34, SURF + 22 + BR, 0), new THREE.Vector3(130, SURF + BR, 0), traySlot(filled)]);
+        liftBall.position.copy(c.getPointAt(Math.min(1, k * 1.0))); break;
+      case 4: setFace(FACE_UP); liftBall.position.copy(traySlot(filled)); nextBall.visible = false; break;
+      case 5: setFace(FACE_UP - (FACE_UP - FACE_DN) * e); liftBall.visible = false; nextBall.visible = false; break;
+      case 6: setFace(FACE_DN); liftBall.visible = false;
+        nextBall.position.lerpVectors(chanPos(-100 - 2 * BR - 4), chanPos(BUF), e);
+        queueBalls[0].position.copy(chanPos(-100 - 2 * BR - 4 - (1 - e) * 0)); break;
+    }
+    if (cyc.i !== 5 && cyc.i !== 6) liftBall.visible = true;
+    document.getElementById('phase').textContent = name;
+  }
+  function advance(dt){
+    cyc.t += dt;
+    if (cyc.t >= PH[cyc.i][1]){
+      cyc.t = 0; cyc.i = (cyc.i + 1) % PH.length;
+      if (cyc.i === 5) cyc.n++;
+      if (cyc.i === 0 && cyc.n % 6 === 5) cyc.n++;      // tray showed full: empty it and start again
+    }
+  }
+
+  // ---------------- explode ----------------
+  var EXP = {hood:[0, 150, 0], wedge:[60, 110, 0], plunger:[0, 60, 0], arm:[0, 20, -40], rail:[0, 0, -70], belt:[0, 0, -110],
+             motor:[0, 0, -190], plate:[0, 0, -150], tube:[0, 0, 0], gates:[-40, 90, 0], channel:[-110, 0, 0], sensors:[0, 0, 70], full:[0, 150, 60]};
+  var explodeAmt = 0;
+  function applyExplode(){
+    var a = ease(explodeAmt);
+    Object.keys(EXP).forEach(function(id){ var v = EXP[id]; G[id].position.set(v[0] * a, v[1] * a, v[2] * a); });
+    plyGroup.forEach(function(m){ m.position.y = (m === ply ? PLY_B : SURF + 0.6) + 90 * a; m.material.opacity = (m === ply ? 0.55 : 0.6) * (1 - 0.7 * a); });
+    // balls follow their carriers during explode
+  }
+
+  // ---------------- highlight ----------------
+  var selected = null;
+  function highlight(id){
+    selected = selected === id ? null : id;
+    Object.keys(partMats).forEach(function(k){
+      partMats[k].forEach(function(m){ if (m.emissive) m.emissive.setHex(k === selected ? 0x7a3a10 : 0x000000); });
+    });
+    document.querySelectorAll('.parts li button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.id === selected ? 'true' : 'false'); });
+    pinEls.forEach(function(p){ p.el.classList.toggle('on', p.id === selected); p.tag.hidden = p.id !== selected; });
+  }
+
+  // ---------------- pins + list + table ----------------
+  var PIN_AT = {
+    tube:[0, 200, 30], plunger:[0, null, 26], arm:[5, null, -40], rail:[0, 180, -58], belt:[PX + 8, 150, -47], motor:[PX, P_LO + 22, -90],
+    plate:[60, 120, -65], gates:[-100, null, 0], channel:[-150, null, 28], sensors:[18, FACE_DN + BR + 8, 38], hood:[-45, SURF + 76, 0],
+    wedge:[80, SURF + 12, 30], full:[140, SURF + 52, 36]
+  };
+  var pinsEl = document.getElementById('pins'), pinEls = [];
+  var list = document.getElementById('partList'), bom = document.getElementById('bom');
+  PARTS.forEach(function(p, i){
+    var li = document.createElement('li');
+    li.innerHTML = '<button type="button" data-id="' + p.id + '" aria-pressed="false"><span class="n">' + (i + 1) + '</span><span class="nm">' + p.name + '<span class="sp">' + p.spec + '</span></span></button>';
+    li.firstChild.addEventListener('click', function(){ highlight(p.id); });
+    list.appendChild(li);
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td class="num">' + (i + 1) + '</td><td><b>' + p.name + '</b></td><td>' + p.spec + '</td><td class="ex">' + p.ex + '</td><td>' + p.role + '</td>';
+    bom.appendChild(tr);
+    var el = document.createElement('button'); el.type = 'button'; el.className = 'pin'; el.textContent = i + 1; el.setAttribute('aria-label', p.name);
+    el.addEventListener('click', function(){ highlight(p.id); });
+    var tag = document.createElement('div'); tag.className = 'tag'; tag.textContent = p.name; tag.hidden = true;
+    pinsEl.appendChild(el); pinsEl.appendChild(tag);
+    pinEls.push({id:p.id, el:el, tag:tag});
+  });
+  var pinsOn = true;
+  function placePins(){
+    var w = stage.clientWidth, h = stage.clientHeight, v = new THREE.Vector3();
+    pinEls.forEach(function(p){
+      var a = PIN_AT[p.id];
+      var y = a[1];
+      if (p.id === 'plunger') y = face - 30;
+      if (p.id === 'arm') y = face - 62;
+      if (p.id === 'gates') y = chanFloor(-100) + 70;
+      if (p.id === 'channel') y = chanFloor(-150) + 25;
+      v.set(a[0], y, a[2]).add(G[p.id].position).project(camera);
+      var show = pinsOn && v.z < 1;
+      p.el.hidden = !show; if (!show){ p.tag.hidden = true; return; }
+      var x = (v.x * 0.5 + 0.5) * w, yy = (-v.y * 0.5 + 0.5) * h;
+      p.el.style.left = x + 'px'; p.el.style.top = yy + 'px';
+      p.tag.style.left = x + 'px'; p.tag.style.top = yy + 'px';
+      if (p.id === selected) p.tag.hidden = false;
+    });
+  }
+
+  // ---------------- controls ----------------
+  var playBtn = document.getElementById('playBtn');
+  playBtn.addEventListener('click', function(){ playing = !playing; playBtn.textContent = playing ? 'Pause cycle' : 'Play cycle'; playBtn.setAttribute('aria-pressed', playing ? 'true' : 'false'); });
+  document.getElementById('explode').addEventListener('input', function(e){ explodeAmt = e.target.value / 100; applyExplode(); });
+  var pinsBtn = document.getElementById('pinsBtn');
+  pinsBtn.addEventListener('click', function(){ pinsOn = !pinsOn; pinsBtn.textContent = pinsOn ? 'Numbers on' : 'Numbers off'; pinsBtn.setAttribute('aria-pressed', pinsOn ? 'true' : 'false'); });
+
+  var VIEWS = {
+    iso:{t:new THREE.Vector3(20, 175, -20), d:760, th:0.78, ph:1.2},
+    drive:{t:new THREE.Vector3(10, 150, -50), d:760, th:2.55, ph:1.3},
+    top:{t:new THREE.Vector3(120, 310, 0), d:620, th:0.5, ph:0.75}
+  };
+  var cam = {t:VIEWS.iso.t.clone(), d:VIEWS.iso.d, th:VIEWS.iso.th, ph:VIEWS.iso.ph}, goal = null;
+  document.querySelectorAll('.views button').forEach(function(b){
+    b.addEventListener('click', function(){
+      goal = VIEWS[b.dataset.view];
+      document.querySelectorAll('.views button').forEach(function(o){ o.setAttribute('aria-pressed', o === b ? 'true' : 'false'); });
+    });
+  });
+  function applyCam(){
+    camera.position.set(cam.t.x + cam.d * Math.sin(cam.ph) * Math.sin(cam.th), cam.t.y + cam.d * Math.cos(cam.ph), cam.t.z + cam.d * Math.sin(cam.ph) * Math.cos(cam.th));
+    camera.lookAt(cam.t);
+  }
+  var pointers = {}, lastPinch = 0;
+  canvas.addEventListener('pointerdown', function(e){ canvas.setPointerCapture(e.pointerId); pointers[e.pointerId] = {x:e.clientX, y:e.clientY}; goal = null; });
+  canvas.addEventListener('pointermove', function(e){
+    if (!pointers[e.pointerId]) return;
+    var ids = Object.keys(pointers);
+    if (ids.length === 1){ var p = pointers[e.pointerId]; cam.th -= (e.clientX - p.x) * 0.006; cam.ph = Math.min(1.52, Math.max(0.15, cam.ph - (e.clientY - p.y) * 0.006)); }
+    pointers[e.pointerId] = {x:e.clientX, y:e.clientY};
+    if (ids.length === 2){ var a = pointers[ids[0]], b = pointers[ids[1]]; var dd = Math.hypot(a.x - b.x, a.y - b.y); if (lastPinch) cam.d = Math.min(2400, Math.max(200, cam.d * lastPinch / dd)); lastPinch = dd; }
+  });
+  function up(e){ delete pointers[e.pointerId]; lastPinch = 0; }
+  canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
+  canvas.addEventListener('wheel', function(e){ e.preventDefault(); goal = null; cam.d = Math.min(2400, Math.max(200, cam.d * (1 + e.deltaY * 0.001))); }, {passive:false});
+
+  function resize(){ var w = stage.clientWidth, h = stage.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+  window.addEventListener('resize', resize);
+
+  var last = performance.now();
+  function frame(now){
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (goal){ var k = reduce ? 1 : Math.min(1, dt * 4); cam.t.lerp(goal.t, k); cam.d += (goal.d - cam.d) * k; cam.th += (goal.th - cam.th) * k; cam.ph += (goal.ph - cam.ph) * k; if (Math.abs(goal.d - cam.d) < 0.5) goal = null; }
+    if (playing && explodeAmt < 0.02) advance(dt);
+    layout();
+    // balls ride with exploded groups
+    if (explodeAmt > 0){
+      var off = G.plunger.position; if (cyc.i === 2 || cyc.i === 1) liftBall.position.add(off);
+      trayBalls.forEach(function(b){ b.position.add(G.wedge.position); });
+      [liftBall, nextBall].concat(queueBalls).forEach(function(b){ if (b.position.x < -20) b.position.add(G.channel.position); });
+    }
+    applyCam();
+    renderer.render(scene, camera);
+    placePins();
+    requestAnimationFrame(frame);
+  }
+  resize(); applyExplode(); layout(); applyCam();
+  requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>
