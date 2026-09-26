@@ -372,19 +372,35 @@
   // the queue lines up back along the valley (shared by every hole)
   var retCurve = new THREE.CatmullRomCurve3([vp(FAR_X - 0.5)].concat(valleyFrom(FAR_X - 0.5)));
   var retLen = retCurve.getLength();
+  // A ball stays on its own side of the V-funnel and rolls back toward the tee box; it only merges with
+  // the others where the funnel pinches into its single outlet (the same mouth shape as the drawn surface).
+  var PINCH = 2.2;
+  function flowPath(xStart, z0){
+    var pts = [];
+    for (var x = xStart; x > OUT_X + 0.05; x -= 0.5){
+      var t = Math.max(0, 1 - (x - OUT_X) / PINCH);               // 0 on the open funnel, 1 at the outlet
+      var drift = 0.12 * (xStart - x) / Math.max(1, xStart - OUT_X);
+      var zz = z0 + (valleyZ(x) - z0) * Math.min(1, drift + t * 0.95);
+      pts.push(new THREE.Vector3(x, funnelY(x, zz) + BR, zz));
+    }
+    return pts.concat(TAIL);
+  }
   HOLES.forEach(function(h){
-    var y = deckTop(h.x), fx = h.x - 1.2;
+    var y = deckTop(h.x);
     h.curve = new THREE.CatmullRomCurve3([
       new THREE.Vector3(h.x, y - 0.05, h.z),
       new THREE.Vector3(h.x, y - CUP_D, h.z),
-      new THREE.Vector3(h.x - 0.1, funnelY(h.x - 0.1, h.z) + BR, h.z),
-      new THREE.Vector3(fx, valleyY(fx) + BR, valleyZ(fx))
-    ].concat(valleyFrom(fx)));
+      new THREE.Vector3(h.x - 0.05, funnelY(h.x - 0.05, h.z) + BR + 0.05, h.z)
+    ].concat(flowPath(h.x - 0.4, h.z)), false, "centripetal");
+    // a missed putt runs on to the back gutter on the same side, then comes back down the same side
+    var zm = Math.max(-TB_W / 2 + 0.6, Math.min(TB_W / 2 - 0.6, h.z + (h.z > 0 ? -0.8 : 0.8) * 1.5));
+    h.missEnd = zm;
+    h.miss = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(TB_L + DECK_L - 0.3, deckTop(TB_L + DECK_L) - 0.7, zm),
+      new THREE.Vector3(FAR_X - 0.3, funnelY(FAR_X - 0.3, zm) + BR, zm)
+    ].concat(flowPath(FAR_X - 0.8, zm)), false, "centripetal");
   });
-  var missCurve = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(TB_L + DECK_L - 0.3, deckTop(TB_L + DECK_L) - 0.7, 0.4),
-    new THREE.Vector3(FAR_X - 0.3, funnelY(FAR_X - 0.3, 0.4) + BR, 0.4)
-  ].concat(valleyFrom(FAR_X - 0.3)));
+  var missCurve = HOLES[0].miss;
   // outlet -> gates tube (the "tube" in funnel -> tube -> plunger)
   scene.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(TAIL), 30, 0.3, 14, false), glass));
 
@@ -507,7 +523,7 @@
     if (made) return new THREE.CatmullRomCurve3([s, new THREE.Vector3(TB_L, TB_H + BR, s.z + dz * 0.3), new THREE.Vector3(h.x - 2, deckTop(h.x - 2) + BR, h.z - 0.05), new THREE.Vector3(h.x, deckTop(h.x) + BR, h.z)]);
     var side = h.z > 0 ? -0.8 : 0.8;          // lip out, run on to the back gutter
     return new THREE.CatmullRomCurve3([s, new THREE.Vector3(TB_L, TB_H + BR, s.z + dz * 0.3), new THREE.Vector3(h.x, deckTop(h.x) + BR, h.z + side),
-      new THREE.Vector3(TB_L + DECK_L - 0.3, deckTop(TB_L + DECK_L) + BR, h.z + side * 1.5)]);
+      new THREE.Vector3(TB_L + DECK_L - 0.3, deckTop(TB_L + DECK_L) + BR, h.missEnd)]);
   }
 
   var REF_LEN = HOLES.reduce(function(a, h){ return Math.max(a, h.curve.getLength()); }, 0);
@@ -552,7 +568,7 @@
           if (play.made){ madeN++; H.flash = 1.6; lastShot = 'Hole ' + (play.hole + 1) + ': in!'; }
           else { missN++; lastShot = 'Hole ' + (play.hole + 1) + ': missed'; }
           play.mesh.material = ballMat;
-          startReturn(play.mesh, play.made ? H.curve : missCurve, sideOf(H));
+          startReturn(play.mesh, play.made ? H.curve : H.miss, sideOf(H));
           play = null;
         }
       }
