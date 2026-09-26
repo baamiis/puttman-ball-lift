@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Puttman Mécanisme de l’élévateur</title>
+<title>Puttman Mécanisme de l’élévateur – plan B</title>
 <style>
   .pnav{max-width:1240px;margin:0 auto 22px;display:grid;grid-template-columns:1fr auto;gap:12px 16px;align-items:center;
     font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:12.5px}
@@ -20,7 +20,7 @@
   .pnav a:focus-visible{outline:2px solid var(--accent,#B5602A);outline-offset:2px}
 </style>
 </head><body>
-<nav class="pnav" aria-label="Pages"><span class="brand"><a class="home" href="../">Puttman · élévateur de balles</a><span class="author">Khalid Hamdoun</span></span><span class="lang" aria-label="Langue"><a href="../../lift/" hreflang="en" lang="en">English</a><a href="./" hreflang="fr" lang="fr" aria-current="true">Français</a></span><span class="tabs"><a href="../teebox/">Tout le parcours</a><a href="../lift/" aria-current="page">Dans l’élévateur (plan A)</a><a href="../liftb/">Élévateur plan B</a></span></nav>
+<nav class="pnav" aria-label="Pages"><span class="brand"><a class="home" href="../">Puttman · élévateur de balles</a><span class="author">Khalid Hamdoun</span></span><span class="lang" aria-label="Langue"><a href="../../liftb/" hreflang="en" lang="en">English</a><a href="./" hreflang="fr" lang="fr" aria-current="true">Français</a></span><span class="tabs"><a href="../teebox/">Tout le parcours</a><a href="../lift/">Dans l’élévateur (plan A)</a><a href="../liftb/" aria-current="page">Élévateur plan B</a></span></nav>
 <style>
   :root{
     --bg:#F6F4EC; --surface:#FFFFFF; --surface-2:#EFEBDD;
@@ -134,9 +134,9 @@
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Retour des balles · élévateur vertical · à l’échelle</div>
-    <h1>Dans l’élévateur : chaque pièce, et comment elle bouge</h1>
-    <p class="sub">Un modèle 3D à l’échelle de l’élévateur placé sous la zone de départ : tube transparent, piston, rail linéaire, courroie crantée, moteur NEMA17, les deux solénoïdes de barrière et les capteurs. Lancez le cycle pour suivre une balle de l’entonnoir jusqu’au bac, ou tirez le curseur de vue éclatée pour séparer les pièces.</p>
+    <div class="eyebrow">Plan B · même élévateur, prise de la balle au niveau du bac · à l’échelle</div>
+    <h1>Plan B : dans l’élévateur, prise au niveau du bac</h1>
+    <p class="sub">Le plan B est le plan A avec un seul changement : le client garde l’entonnoir en V tel quel, donc la balle arrive à seulement 24 mm au-dessus de la dalle. L’élévateur utilise donc un palet court au lieu du piston, parcourt 305 mm au lieu de 232, et le haut du rail et de la courroie (68 mm) traverse une fente du contreplaqué dans un capot plus long. Tout le reste est identique au plan A. Lancez le cycle pour suivre une balle, ou tirez le curseur de vue éclatée.</p>
   </header>
 
   <section class="viewer" aria-label="Modèle 3D">
@@ -162,21 +162,21 @@
   </section>
 
   <section class="steps" aria-label="Déroulement d’un cycle">
-    <div class="step"><span class="k">1 · Chargement</span><p>Le piston attend en bas. Le solénoïde de la barrière inférieure retire sa tige pendant 0,15 s et une balle roule du canal de l’entonnoir, par la fenêtre latérale, jusque sur la face du piston.</p><span class="t">Le capteur à faisceau confirme : une seule balle</span></div>
-    <div class="step"><span class="k">2 · Montée</span><p>Le moteur entraîne la poulie basse ; la courroie tire le chariot le long du rail, et le bras qui traverse la fente du tube monte le piston de 232 mm.</p><span class="t">≈2 s · ~0,1 N·m · 260 tr/min en pointe</span></div>
+    <div class="step"><span class="k">1 · Chargement</span><p>Le palet attend en bas, au niveau du bac client (~24 mm). Le solénoïde de la barrière inférieure tire sa tige vers le bas pendant 0,15 s et une balle roule, par la fenêtre latérale, jusque sur le palet.</p><span class="t">Le capteur à faisceau confirme : une seule balle</span></div>
+    <div class="step"><span class="k">2 · Montée</span><p>Le moteur entraîne la poulie basse ; la courroie tire le chariot le long du rail, et le bras qui traverse la fente du tube monte le palet de 305 mm. Le haut du rail et de la courroie est dans le capot.</p><span class="t">≈2,6 s · ~0,1 N·m · 260 tr/min en pointe</span></div>
     <div class="step"><span class="k">3 · Éjection</span><p>La face est inclinée de 10° vers la sortie. Quand son bord bas dépasse la lèvre de la cale, la paroi du tube disparaît et la gravité fait rouler la balle dehors. Le toit monte vers la sortie : si la balle saute, elle est aussi poussée dehors.</p><span class="t">≈0,2 s jusqu’à la lèvre · 0,26 m/s</span></div>
-    <div class="step"><span class="k">4 · Roulement &amp; retour</span><p>La balle descend la cale de 22 mm (≈0,56 m/s) et roule jusqu’au bout de la file du bac. Le piston redescend ; la barrière supérieure laisse passer la balle suivante entre les deux barrières.</p><span class="t">Une balle ≈ toutes les 5 s jusqu’à ce que le bac soit plein</span></div>
+    <div class="step"><span class="k">4 · Roulement &amp; retour</span><p>La balle descend la cale de 22 mm (≈0,56 m/s) et roule jusqu’au bout de la file du bac. Le palet redescend ; la barrière supérieure laisse passer la balle suivante entre les deux barrières.</p><span class="t">Une balle ≈ toutes les 6 s jusqu’à ce que le bac soit plein</span></div>
   </section>
 
   <section class="callout" aria-label="Changement d’entraînement">
     <div>
-      <h2>Changement d’entraînement : courroie crantée au lieu de la vis</h2>
-      <p>Avec le capot, le piston doit parcourir 232 mm, et tout doit tenir sous le contreplaqué (environ 272 mm libres). Une vis trapézoïdale demande sa course d’écrou plus un palier à chaque extrémité plus une poulie : environ 287 mm, ce qui ne rentre pas. Une courroie GT2 tourne sur des poulies à côté du rail, donc seule la longueur du rail compte : 232 mm de course + 29 mm de chariot = 261 mm. Elle rentre, tourne moins vite (≈260 tr/min) et s’entretient plus facilement. Elle remplace la vis de la spécification édition 2.</p>
+      <h2>Pourquoi le plan B est un peu différent</h2>
+      <p>Un seul point change par rapport au plan A : la balle est prise au niveau du bac client (~24 mm) au lieu de 97 mm. Il en découle, et seulement cela : l’élévateur parcourt 305 mm au lieu de 232 ; un piston de 80 mm ne rentre plus sous la prise, donc on utilise un palet court ; le rail demande 340 mm alors qu’environ 272 mm tiennent sous le contreplaqué, donc son haut (68 mm) traverse une fente dans un capot plus long (120 × 100 au lieu de 90 × 90) ; et les solénoïdes des barrières sont à côté du canal car le fond est trop bas pour les placer dessous. Même position, même courroie, mêmes barrières, même toit de capot, même cale et même bac que le plan A.</p>
     </div>
     <div class="bars" aria-label="Hauteur nécessaire et disponible">
-      <div class="bar"><span>Vis trapézoïdale : 287 mm nécessaires</span><div class="track"><div class="fill" style="width:100%;background:var(--flag)"></div><div class="limit" style="left:94.8%"></div></div></div>
-      <div class="bar"><span>Courroie GT2 : 261 mm nécessaires</span><div class="track"><div class="fill" style="width:90.9%;background:var(--structure)"></div><div class="limit" style="left:94.8%"></div></div></div>
-      <span style="color:var(--ink-muted)">Trait noir = 272 mm disponibles sous le contreplaqué</span>
+      <div class="bar"><span>Rail plan B : 340 mm nécessaires</span><div class="track"><div class="fill" style="width:100%;background:var(--flag)"></div><div class="limit" style="left:94.8%"></div></div></div>
+      <div class="bar"><span>Rail plan A : 261 mm nécessaires</span><div class="track"><div class="fill" style="width:90.9%;background:var(--structure)"></div><div class="limit" style="left:94.8%"></div></div></div>
+      <span style="color:var(--ink-muted)">Trait noir = 272 mm disponibles sous le contreplaqué ; le reste du rail du plan B est dans le capot</span>
     </div>
   </section>
 
@@ -188,7 +188,7 @@
         <tbody id="bom"></tbody>
       </table>
     </div>
-    <p class="note">Le modèle et les valeurs suivent le concept des éditions 2/3 : chargement du piston à 95 mm, haut de course à 327 mm, surface de départ à 300 mm (CAO client), contreplaqué de 18 mm supposé. Les « pièces types » sont des références courantes du commerce pour le dimensionnement et les devis, pas un choix définitif. Le canal de l’entonnoir est représenté par la section droite finale que l’entonnoir du client doit avoir.</p>
+    <p class="note">Modèle plan B : chargement du palet à 22 mm (niveau du bac client), haut de course à 327 mm, surface de départ à 300 mm et contreplaqué de 18 mm d’après le STEP du client. Les « pièces types » sont des références courantes du commerce pour le dimensionnement et les devis, pas un choix définitif. Le canal de l’entonnoir est représenté par la section droite finale que l’entonnoir du client doit avoir.</p>
   </section>
 </div>
 
@@ -198,16 +198,16 @@
   // ---------------- parts data (shared by pins, list and table) ----------------
   var PARTS = [
     {id:'tube',   name:'Tube de l’élévateur',  spec:'PC transparent Ø56 × 3 mm, 272 mm de long, fente de 10 mm + fenêtre latérale 50 × 55 mm', ex:'Tube polycarbonate Ø56/50', role:'Guide la balle et le piston ; on voit la balle monter.'},
-    {id:'plunger',name:'Piston',               spec:'Ø49 × 80 mm, face supérieure inclinée de 10° vers la sortie, 2 bagues PTFE', ex:'POM-C ou PA12-CF', role:'Porte la balle ; l’inclinaison la fait rouler dehors en haut.'},
-    {id:'arm',    name:'Bras d’entraînement',  spec:'Équerre aluminium 5 mm traversant la fente du tube', ex:'EN AW-6082 T6', role:'Relie le piston au chariot ; empêche le piston de tourner.'},
-    {id:'rail',   name:'Rail linéaire + chariot',spec:'Rail 268 mm, chariot court 29 mm', ex:'Rail MGN9 + patin MGN9C', role:'Garde la montée droite et régulière.'},
-    {id:'belt',   name:'Courroie crantée + poulies',spec:'Courroie 6 mm, poulie moteur 20 dents (bas) et poulie de renvoi (haut), entraxe 238 mm', ex:'GT2 6 mm, GT2-20T', role:'Transforme la rotation du moteur en montée/descente (40 mm par tour).'},
+    {id:'plunger',name:'Palet',                spec:'Palet Ø49 × 8–17 mm (remplace le piston de 80 mm), face supérieure inclinée de 10° vers la sortie', ex:'POM-C ou PA12-CF', role:'Porte la balle depuis le niveau du bac ; l’inclinaison la fait rouler dehors en haut.'},
+    {id:'arm',    name:'Bras d’entraînement',  spec:'Équerre aluminium 5 mm en L : descend de 30 mm depuis le chariot et entre par la fente du tube', ex:'EN AW-6082 T6', role:'Relie le palet au chariot ; empêche le palet de tourner.'},
+    {id:'rail',   name:'Rail linéaire + chariot',spec:'Rail de 340 mm (Z 28 → 368) ; le haut (68 mm) traverse une fente de 42 × 32 mm du contreplaqué', ex:'Rail MGN9 + patin MGN9C', role:'Garde la montée droite et régulière.'},
+    {id:'belt',   name:'Courroie crantée + poulies',spec:'Courroie 6 mm, poulie moteur 20 dents (bas) et poulie de renvoi (haut, dans le capot), entraxe 320 mm', ex:'GT2 6 mm, GT2-20T', role:'Transforme la rotation du moteur en montée/descente (40 mm par tour).'},
     {id:'motor',  name:'Moteur pas à pas',     spec:'42 × 42 × 40 mm, ~0,4 N·m de maintien, 24 V', ex:'NEMA17 + driver TMC2209', role:'Entraîne l’élévateur ; courant limité à ≤ 50 N de poussée, détection de blocage.'},
     {id:'plate',  name:'Platine + embase',     spec:'Platine 5 mm 270 × 120 mm sur embase 6 mm 220 × 200 mm, pieds caoutchouc', ex:'EN AW-6082 / 5754', role:'Maintient tube, rail et moteur alignés ; se fixe sur la structure.'},
-    {id:'gates',  name:'Solénoïdes de barrière (×2)',spec:'24 V push-pull, course ~10 mm, rappel par ressort, espacés de 50 mm', ex:'Type JF-0530B', role:'Laissent passer une seule balle à la fois vers le piston.'},
-    {id:'channel',name:'Canal de fin d’entonnoir',spec:'Canal en U de 50 mm, ≥110 mm droit, pente ≥10°, arrive du côté haut de la face', ex:'Entonnoir client / contreplaqué ou PETG', role:'Met en file les balles de tous les trous vers l’élévateur.'},
+    {id:'gates',  name:'Solénoïdes de barrière (×2)',spec:'Mêmes tiges Ø6 à travers le fond que le plan A, pas de 55 mm ; le fond est à ~24 mm, donc chaque solénoïde est à côté du canal et tire la tige par un renvoi', ex:'Type JF-0530B', role:'Laissent passer une seule balle à la fois vers le palet.'},
+    {id:'channel',name:'Canal de fin d’entonnoir',spec:'Canal en U de 50 mm, fond à 24 mm au-dessus de la dalle au tube, section des barrières à 5°, puis suit le bac client à 3°', ex:'Entonnoir client / contreplaqué ou PETG', role:'Met en file les balles de tous les trous vers l’élévateur.'},
     {id:'sensors',name:'Capteurs',             spec:'Capteur d’origine en bas du rail, faisceau IR à travers le tube à hauteur de chargement', ex:'Fourche optique + paire IR', role:'Position d’origine ; confirme qu’une balle est chargée.'},
-    {id:'hood',   name:'Capot',                spec:'Tôle 1,5 mm, 75 mm de haut à l’arrière, 95 mm à l’ouverture', ex:'Inox ou alu thermolaqué', role:'Couvre le trou ; le toit renvoie la balle vers la sortie.'},
+    {id:'hood',   name:'Capot',                spec:'Tôle 1,5 mm, 120 × 100 mm (plus long, couvre le haut de l’entraînement), 75 mm de haut à l’arrière, 95 mm à l’ouverture', ex:'Inox ou alu thermolaqué', role:'Couvre le trou et le haut de l’entraînement ; le toit renvoie la balle vers la sortie.'},
     {id:'wedge',  name:'Cale de sortie + bac', spec:'Cale 100 mm, chute 22 mm ; bac 225 mm pour 5 balles avec butée de 15 mm', ex:'POM ou bois dur ; rails alu', role:'Donne l’élan à la balle et garde des balles prêtes à jouer.'},
     {id:'full',   name:'Capteur bac plein',    spec:'IR réflectif à l’entrée du bac', ex:'Module IR réflectif', role:'Arrête l’élévateur quand 5 balles attendent.'}
   ];
@@ -266,7 +266,7 @@
   var slab = new THREE.Mesh(new THREE.PlaneGeometry(2400, 2400), M.slab); slab.rotation.x = -Math.PI / 2; slab.receiveShadow = true; scene.add(slab);
 
   // ---------------- geometry (x = exit direction, z- = drive side, y up, slab y = 0) ----------------
-  var FACE_DN = 95, FACE_UP = 327, TILT = 10 * Math.PI / 180, BR = 21.35, PLY_B = 282, SURF = 300;
+  var FACE_DN = 21.8, FACE_UP = 327, TILT = 10 * Math.PI / 180, BR = 21.35, PLY_B = 282, SURF = 300;
 
   // base + mounting plate
   add('plate', BX(220, 6, 200), M.alu, 20, 7, -25);
@@ -290,7 +290,7 @@
     });
   }
   var SLOT = [Math.PI, 5 / 28], WIN = [3 * Math.PI / 2, 25 / 28];
-  arcTube(10, 95, [SLOT]); arcTube(95, 152, [SLOT, WIN]); arcTube(152, PLY_B, [SLOT]);
+  arcTube(2, 20.8, [SLOT]); arcTube(20.8, 83.8, [SLOT, WIN]); arcTube(83.8, PLY_B, [SLOT]);
   // tube clamps
   [60, 230].forEach(function(y){
     add('tube', new THREE.TorusGeometry(29.5, 2.2, 10, 40, Math.PI * 1.6), M.alu, 0, y, 0, [Math.PI / 2, 0, Math.PI * 0.7]);
@@ -300,6 +300,7 @@
   // plywood + turf with hole, see-through
   var plyShape = new THREE.Shape(); plyShape.moveTo(-230, -180); plyShape.lineTo(420, -180); plyShape.lineTo(420, 180); plyShape.lineTo(-230, 180); plyShape.lineTo(-230, -180);
   var hole = new THREE.Path(); hole.absarc(0, 0, 25, 0, Math.PI * 2, true); plyShape.holes.push(hole);
+  var slotH = new THREE.Path(); slotH.moveTo(-10, 38); slotH.lineTo(-10, 66); slotH.lineTo(40, 66); slotH.lineTo(40, 38); slotH.lineTo(-10, 38); plyShape.holes.push(slotH);  // Plan B: drive tower slot
   var plyGeo = new THREE.ExtrudeGeometry(plyShape, {depth:18, bevelEnabled:false});
   var ply = new THREE.Mesh(plyGeo, M.ply); ply.rotation.x = -Math.PI / 2; ply.position.set(0, PLY_B, 0); ply.renderOrder = 2; scene.add(ply);
   var turfGeo = new THREE.ShapeGeometry(plyShape);
@@ -307,22 +308,23 @@
   var plyGroup = [ply, turf];
 
   // plunger with tilted top (face centre height F): build once, move group
-  var plGeo = new THREE.CylinderGeometry(24.5, 24.5, 80, 48, 4);
+  var plGeo = new THREE.CylinderGeometry(24.5, 24.5, 12, 48, 2);   // Plan B: short puck
   var pos = plGeo.attributes.position;
-  for (var i = 0; i < pos.count; i++){ if (pos.getY(i) > 39) pos.setY(i, 40 - pos.getX(i) * Math.tan(TILT)); }
+  for (var i = 0; i < pos.count; i++){ if (pos.getY(i) > 5) pos.setY(i, 6 - pos.getX(i) * Math.tan(TILT)); }
   plGeo.computeVertexNormals();
   var plunger = new THREE.Group(); G.plunger.add(plunger);
   var plMesh = new THREE.Mesh(plGeo, M.pom.clone()); plMesh.castShadow = true; plunger.add(plMesh); partMats.plunger = [plMesh.material];
-  [-26, 22].forEach(function(y){ var b = new THREE.Mesh(CY(24.8, 24.8, 5, 48), new THREE.MeshStandardMaterial({color:0xE9E4D6, roughness:0.4})); b.position.y = y; plunger.add(b); partMats.plunger.push(b.material); });
+  [].forEach(function(y){ var b = new THREE.Mesh(CY(24.8, 24.8, 5, 48), new THREE.MeshStandardMaterial({color:0xE9E4D6, roughness:0.4})); b.position.y = y; plunger.add(b); partMats.plunger.push(b.material); });
   // arm (moves with plunger) - attached 18 mm above plunger bottom
   var armG = new THREE.Group(); G.arm.add(armG);
   var arm1 = new THREE.Mesh(BX(10, 12, 32), M.alu.clone()); arm1.position.set(0, 0, -34); armG.add(arm1);
   var arm2 = new THREE.Mesh(BX(34, 12, 6), M.alu.clone()); arm2.position.set(8, 0, -49); armG.add(arm2);
-  partMats.arm = [arm1.material, arm2.material]; arm1.castShadow = arm2.castShadow = true;
+  var arm3 = new THREE.Mesh(BX(6, 34, 6), M.alu.clone()); arm3.position.set(22, 17, -49); armG.add(arm3);  // drop from the carriage
+  partMats.arm = [arm1.material, arm2.material, arm3.material]; arm1.castShadow = arm2.castShadow = arm3.castShadow = true;
 
   // rail + carriage (carriage moves)
-  add('rail', BX(9, 268, 6.5), M.steel, 0, 146, -56.75);
-  for (var yb = 22; yb < 280; yb += 20){ add('rail', CY(2.2, 2.2, 1, 12), M.black, 0, yb, -53.4, [Math.PI / 2, 0, 0]); }
+  add('rail', BX(9, 340.2, 6.5), M.steel, 0, 198.4, -56.75);
+  for (var yb = 34; yb < 364; yb += 20){ add('rail', CY(2.2, 2.2, 1, 12), M.black, 0, yb, -53.4, [Math.PI / 2, 0, 0]); }
   var carG = new THREE.Group(); G.rail.add(carG);
   var car = new THREE.Mesh(BX(20, 29, 10), M.steel.clone()); car.position.set(0, 0, -48.5); carG.add(car);
   var carEnd = new THREE.Mesh(BX(20, 3, 10), M.red.clone()); carEnd.position.set(0, 16, -48.5); carG.add(carEnd);
@@ -331,7 +333,7 @@
   car.castShadow = true;
 
   // belt drive: pulleys at x = 26 on axis z, belt in plane z = -48
-  var PX = 26, P_LO = 30, P_HI = 268, PR = 6.37;
+  var PX = 26, P_LO = 40, P_HI = 360, PR = 6.37;
   var pulleyLo = new THREE.Group(); pulleyLo.position.set(PX, P_LO, -47); G.belt.add(pulleyLo);
   var pulleyHi = new THREE.Group(); pulleyHi.position.set(PX, P_HI, -47); G.belt.add(pulleyHi);
   [pulleyLo, pulleyHi].forEach(function(pg, k){
@@ -369,9 +371,9 @@
   add('motor', BX(8, 5, 8), M.black, 70, 18, -95);
 
   // funnel end channel (-x side), floor rising 10° away from the tube
-  var chanLen = 170, CH0 = -26, chanFloor = function(x){ return FACE_DN + (CH0 - x) * Math.tan(10 * Math.PI / 180); };
+  var chanLen = 170, CH0 = -26, chanFloor = function(x){ return 23.8 + (CH0 - x) * Math.tan(5 * Math.PI / 180); };
   var chG = new THREE.Group(); G.channel.add(chG);
-  var chMid = CH0 - chanLen / 2, chAng = 10 * Math.PI / 180;
+  var chMid = CH0 - chanLen / 2, chAng = 5 * Math.PI / 180;
   var chFloor = new THREE.Mesh(BX(chanLen, 3, 52), M.wood.clone()); chFloor.position.set(chMid, chanFloor(chMid) - 1.5, 0); chFloor.rotation.z = -chAng; chG.add(chFloor);
   [-27.5, 27.5].forEach(function(z){ var w = new THREE.Mesh(BX(chanLen, 30, 3), M.wood.clone()); w.position.set(chMid, chanFloor(chMid) + 13, z); w.rotation.z = -chAng; chG.add(w); partMats.channel = (partMats.channel || []).concat([w.material]); });
   partMats.channel.push(chFloor.material);
@@ -384,12 +386,11 @@
   var gatePins = [];
   GATE_X.forEach(function(x){
     var y = chanFloor(x);
-    add('gates', BX(22, 3, 70), M.aluDk, x, y + 50, 0);                // bridge
-    add('gates', BX(18, 26, 14), M.steel, x, y + 66, 0);               // solenoid frame
-    add('gates', CY(6, 6, 14, 16), M.copper, x, y + 66, 0, [Math.PI / 2, 0, 0]); // coil
-    var pin = add('gates', CY(3, 3, 44, 12), M.steel, x, y + 30, 0);
+    var pin = add('gates', CY(3, 3, 20, 12), M.red, x, y + 2, 0);        // pin through the floor (closed: top 12 mm up)
     gatePins.push({m:pin, y:y});
-    add('gates', new THREE.TorusGeometry(4, 0.8, 6, 12), M.steel, x, y + 58, 0, [Math.PI / 2, 0, 0]); // spring hint
+    add('gates', BX(18, 4, 60), M.aluDk, x, Math.max(y - 12, 3), 22);    // bell-crank under the channel
+    add('gates', BX(20, 20, 34), M.steel, x, Math.max(y - 2, 12), 52);  // solenoid beside the channel
+    add('gates', CY(6, 6, 22, 16), M.copper, x, Math.max(y - 2, 12), 52, [0, 0, Math.PI / 2]);
   });
 
   // sensors: IR pair across tube at load height, home switch at rail bottom
@@ -400,10 +401,10 @@
 
   // hood (on the surface): back wall 75, roof rising to 95 at the opening (+x)
   var hoodMat = new THREE.MeshStandardMaterial({color:0xB9C2C8, metalness:0.7, roughness:0.35, transparent:true, opacity:0.55, side:THREE.DoubleSide, depthWrite:false});
-  add('hood', BX(1.5, 75, 90), hoodMat, -45, SURF + 37.5, 0);
+  add('hood', BX(1.5, 75, 120), hoodMat, -45, SURF + 37.5, -15);
   var sideShape = new THREE.Shape(); sideShape.moveTo(-45, 0); sideShape.lineTo(45, 0); sideShape.lineTo(45, 95); sideShape.lineTo(-45, 75); sideShape.lineTo(-45, 0);
-  [-45, 45].forEach(function(z){ var s = add('hood', new THREE.ShapeGeometry(sideShape), hoodMat, 0, SURF, z); });
-  var roof = add('hood', BX(94, 1.5, 93), hoodMat, 0, SURF + 85, 0, [0, 0, Math.atan(20 / 90)]);
+  [-75, 45].forEach(function(z){ var s = add('hood', new THREE.ShapeGeometry(sideShape), hoodMat, 0, SURF, z); });
+  var roof = add('hood', BX(94, 1.5, 123), hoodMat, 0, SURF + 85, -15, [0, 0, Math.atan(20 / 90)]);
   add('hood', BX(96, 3, 96), M.aluDk, 0, SURF + 1.5, 0).visible = false;
 
   // wedge + tray
@@ -426,8 +427,8 @@
 
   // ---------------- cycle animation ----------------
   var PH = [ // name, duration
-    ['En attente', 0.7], ['La barrière basse s’ouvre : la balle roule sur le piston', 0.7], ['La courroie monte le piston de 232 mm', 2.0],
-    ['La face dépasse la lèvre : la balle sort', 0.9], ['La balle rejoint le bac', 0.3], ['Le piston redescend', 2.0], ['La barrière haute laisse entrer la balle suivante', 0.6]
+    ['En attente', 0.7], ['La tige de la barrière basse descend : la balle roule sur le palet', 0.7], ['La courroie monte le palet de 305 mm', 2.6],
+    ['La face dépasse la lèvre : la balle sort', 0.9], ['La balle rejoint le bac', 0.3], ['Le palet redescend', 2.6], ['La barrière haute laisse entrer la balle suivante', 0.6]
   ];
   var cyc = {i:0, t:0, n:0}, playing = true;
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -436,9 +437,9 @@
 
   function setFace(f){
     var d = f - face; face = f;
-    plunger.position.set(0, f - 40, 0);
-    armG.position.set(0, f - 62, 0);
-    carG.position.set(0, f - 62, 0);
+    plunger.position.set(0, f - 6, 0);
+    armG.position.set(0, f - 9, 0);
+    carG.position.set(0, f + 24, 0);
     pulleyAngle += d / PR;
     pulleyLo.rotation.z = pulleyAngle; pulleyHi.rotation.z = pulleyAngle;
   }
@@ -448,8 +449,8 @@
     var name = PH[cyc.i][0], k = Math.min(1, cyc.t / PH[cyc.i][1]), e = ease(k);
     var filled = cyc.n % 6;           // tray fill level, resets after full
     trayBalls.forEach(function(b, i){ b.visible = i < filled; b.position.copy(traySlot(i)); });
-    gatePins[0].m.position.y = gatePins[0].y + 30 + (cyc.i === 1 && k < 0.5 ? 24 : 0);
-    gatePins[1].m.position.y = gatePins[1].y + 30 + (cyc.i === 6 && k < 0.6 ? 24 : 0);
+    gatePins[0].m.position.y = gatePins[0].y + 2 - (cyc.i === 1 && k < 0.5 ? 14 : 0);
+    gatePins[1].m.position.y = gatePins[1].y + 2 - (cyc.i === 6 && k < 0.6 ? 14 : 0);
     queueBalls[0].position.copy(chanPos(-100 - 2 * BR - 4));
     queueBalls[1].position.copy(chanPos(-100 - 4 * BR - 6));
     liftBall.material = M.ballLive;
