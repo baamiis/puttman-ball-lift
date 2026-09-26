@@ -212,7 +212,7 @@
       <span class="chip miss" id="chipMiss">Missed <b>0</b></span>
       <span class="chip" id="chipLast">Last <b>–</b></span>
     </div>
-    <p class="trail-note"><span><i style="background:#1e6fd9"></i>left holes</span><span><i style="background:#2e8b3d"></i>middle holes</span><span><i style="background:#e07b12"></i>right holes</span><span>Each ball leaves a coloured trail back to the lift: every hole ends in the same funnel. Tip: use the “Under the deck” view.</span></p>
+    <p class="trail-note"><span><i style="background:#1e6fd9"></i>left holes</span><span><i style="background:#2e8b3d"></i>middle holes</span><span><i style="background:#e07b12"></i>right holes</span><span>Returning balls are tinted by side so you can follow them: every hole ends in the same funnel. Tip: use the “Under the deck” view.</span></p>
   </div>
 
   <div class="play">
@@ -541,10 +541,7 @@
     returning.push({mesh:m, curve:curve, len:curve.getLength(), s:0});
     if (!side) return;
     m.material = sideMat[side];                             // the returning ball shows its side colour
-    var tm = new THREE.MeshBasicMaterial({color:SIDE_COL[side], transparent:true, opacity:0.9, depthTest:false});
-    var tr = new THREE.Mesh(new THREE.TubeGeometry(curve, 160, 0.045, 6, false), tm);
-    tr.renderOrder = 5; scene.add(tr); trails.push({mesh:tr, age:0});
-    if (trails.length > 12){ var old = trails.shift(); scene.remove(old.mesh); old.mesh.geometry.dispose(); }
+    // no trail lines: just the ball rolling, as it would in reality
   }
 
   // ---------- update ----------
