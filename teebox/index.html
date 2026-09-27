@@ -118,7 +118,7 @@
   .aimbtn:disabled{opacity:.4;cursor:default}.aimbtn:not(:disabled):hover{filter:brightness(1.1)}
   .aimbtn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .trail-note{margin:0;font-size:12.5px;color:var(--ink-muted);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .trail-note i{display:inline-block;width:18px;height:4px;border-radius:2px;vertical-align:middle;margin-right:4px}
+  .trail-note i{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:-1px;margin-right:5px}
   .status-line{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--ink-muted);flex:1;min-width:200px}
   .chips{display:flex;gap:8px;flex-wrap:wrap}
   .chip{
@@ -479,7 +479,6 @@
   var SIDE_COL = {L:0x1e6fd9, M:0x2e8b3d, R:0xe07b12};
   var sideMat = {L:new THREE.MeshStandardMaterial({color:0x6aa8f7, roughness:0.35}), M:new THREE.MeshStandardMaterial({color:0x7fd18c, roughness:0.35}), R:new THREE.MeshStandardMaterial({color:0xffb45e, roughness:0.35})};
   function sideOf(h){ return h.z < -0.5 ? "L" : (h.z > 0.5 ? "R" : "M"); }   // player looks along +x: -z is on the left
-  var trails = [];
   var madeN = 0, missN = 0;
   var allBalls = [];
 
@@ -548,11 +547,6 @@
   function ease(t){ return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
 
   function step(dt){
-    // coloured trails fade over ~40 s
-    for (var ti = trails.length - 1; ti >= 0; ti--){
-      var T = trails[ti]; T.age += dt; T.mesh.material.opacity = Math.max(0, 0.9 - T.age / 45);
-      if (T.age > 40){ scene.remove(T.mesh); T.mesh.geometry.dispose(); trails.splice(ti, 1); }
-    }
     // tray balls roll toward their slots
     tray.forEach(function(m, i){ var p = traySlot(i); m.position.lerp(p, Math.min(1, dt * 6)); });
     // queue balls settle toward their slots
