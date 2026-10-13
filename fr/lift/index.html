@@ -421,7 +421,8 @@
   var liftBall = ball(), nextBall = ball(), queueBalls = [ball(), ball()];
   var trayBalls = []; for (var t5 = 0; t5 < 5; t5++){ var tb = ball(); tb.visible = false; trayBalls.push(tb); }
   function chanPos(x){ return new THREE.Vector3(x, chanFloor(x) + BR + 1, 0); }
-  var BUF = -75, LOAD = new THREE.Vector3(0, FACE_DN + BR, 0);
+  var Q0 = -100 - 3 - BR, Q1 = Q0 - 2 * BR, Q2 = Q1 - 2 * BR;
+  var BUF = -50 - 3 - BR, LOAD = new THREE.Vector3(0, FACE_DN + BR, 0);
   function traySlot(i){ return new THREE.Vector3(355 - BR - i * 2 * BR, SURF + BR, 0); }
 
   // ---------------- cycle animation ----------------
@@ -448,10 +449,10 @@
     var name = PH[cyc.i][0], k = Math.min(1, cyc.t / PH[cyc.i][1]), e = ease(k);
     var filled = cyc.n % 6;           // tray fill level, resets after full
     trayBalls.forEach(function(b, i){ b.visible = i < filled; b.position.copy(traySlot(i)); });
-    gatePins[0].m.position.y = gatePins[0].y + 2 - (cyc.i === 1 && k < 0.5 ? 14 : 0);
-    gatePins[1].m.position.y = gatePins[1].y + 2 - (cyc.i === 6 && k < 0.6 ? 14 : 0);
-    queueBalls[0].position.copy(chanPos(-100 - 2 * BR - 4));
-    queueBalls[1].position.copy(chanPos(-100 - 4 * BR - 6));
+    gatePins[0].m.position.y = gatePins[0].y + 2 - (cyc.i === 1 && k < 0.7 ? 14 : 0);
+    gatePins[1].m.position.y = gatePins[1].y + 2 - (cyc.i === 6 && k < 0.85 ? 14 : 0);
+    queueBalls[0].position.copy(chanPos(Q0));
+    queueBalls[1].position.copy(chanPos(Q1));
     liftBall.material = M.ballLive;
     nextBall.visible = true;
     switch (cyc.i){
@@ -465,8 +466,9 @@
       case 4: setFace(FACE_UP); liftBall.position.copy(traySlot(filled)); nextBall.visible = false; break;
       case 5: setFace(FACE_UP - (FACE_UP - FACE_DN) * e); liftBall.visible = false; nextBall.visible = false; break;
       case 6: setFace(FACE_DN); liftBall.visible = false;
-        nextBall.position.lerpVectors(chanPos(-100 - 2 * BR - 4), chanPos(BUF), e);
-        queueBalls[0].position.copy(chanPos(-100 - 2 * BR - 4 - (1 - e) * 0)); break;
+        nextBall.position.lerpVectors(chanPos(Q0), chanPos(BUF), e);   // upper pin down: the queue rolls one ball forward
+        queueBalls[0].position.lerpVectors(chanPos(Q1), chanPos(Q0), e);
+        queueBalls[1].position.lerpVectors(chanPos(Q2), chanPos(Q1), e); break;
     }
     if (cyc.i !== 5 && cyc.i !== 6) liftBall.visible = true;
     document.getElementById('phase').textContent = name;
